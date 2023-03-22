@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import {createBrowserRouter, createRoutesFromElements, RouterProvider, Outlet, Route} from "react-router-dom";
+import {createBrowserRouter, createRoutesFromElements, RouterProvider, Outlet, Route, Link} from "react-router-dom";
 import LoginPage from "./LoginPage.jsx";
 import SignUp from "./SignUp.jsx";
 import Failed from "./failed";
@@ -17,10 +17,14 @@ function Logic() {
             r.style.setProperty("--txtColor",mode?"black":"white");
         },[mode]
     );
+
     return (
         <>
-            <button type="button" className="btn btn-secondary" onClick={() => setMode(!mode)}>Light/Dark</button>
-            <Outlet />
+            <div style={{alignSelf: "end"}}>
+                <Link to="/Login"><button className="btn btn-primary">Login</button></Link>
+                <button type="button" className="btn btn-primary" style={{marginLeft:".25rem"}} onClick={() => setMode(!mode)}>Light/Dark</button>
+            </div>
+                <Outlet context={mode}/>
         </>
     );
 }

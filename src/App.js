@@ -1,31 +1,32 @@
 import './App.css';
-import {Link} from "react-router-dom";
+import {useOutletContext} from "react-router-dom";
 
 function App() {
+    const {mode} = useOutletContext();
     return (
         <div className="App">
 
 
-            <div className="container" style={{width:"100%"}}>
-                <div className="row" style={{width:"100%", height:"10%"}}>
-                    <div>
-                        <Link to="/login">
-                            <button type="button" className="btn btn-secondary">Login</button>
-                        </Link>
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-9">
+                        //video
+                    </div>
+                    <div className="col-3">
+                        //playlist
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col mb-3" style={{width:"40%"}}>
-                        <label className="form-label">Youtube playlist id/link</label>
-                        <input type="text" className="form-control" example="youtube.com/playlist/123"/>
+                    <div className="col-1"></div>
+                    <div className="col-4 mb-3">
+                        <input type="text" className="form-control" placeholder="Youtube playlist id/link"/>
                     </div>
-                    <div className="col mb-3" style={{width:"40%"}}>
-                        <label className="form-label">Room ID</label>
-                        <input type="text" className="form-control" example="12345678"/>
+                    <div className="col-4 mb-3">
+                        <input type="text" className="form-control" placeholder="Room ID"/>
                     </div>
-                    <div className="col" style={{width:"20%"}}>
-                        <button type="button" className="btn btn-secondary">Randomize</button>
-                        <button type="button" className="btn btn-secondary">Reverse</button>
+                    <div className="col-3">
+                        <button type="button" className="btn btn-primary" style={{marginRight:"1rem", marginLeft:"auto"}}>Random</button>
+                        <button type="button" className="btn btn-primary" style={{marginRight:"auto", marginLeft:"1rem"}}>Reverse</button>
                     </div>
                 </div>
             </div>
