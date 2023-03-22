@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 function SignUp() {
 
     return (
-        <div className="container" style={{marginTop:"auto", marginBottom:"auto"}}>
+        <div className="container" style={{marginTop: "auto", marginBottom: "auto"}}>
 
             <div className="row">
                 <div className="col-3"></div>
@@ -20,11 +20,12 @@ function SignUp() {
                     <div className="mb-3">
                         <label className="form-label">Repeat password</label>
                         <input type="text" className="form-control" placeholder="password"/>
-                            <Link to="/">
-                                <div className="d-grid gap-2 col-6 mx-auto">
-                                <button type="button" className="btn btn-primary" style={{marginTop:"3rem"}}>Login</button>
-                                </div>
-                            </Link>
+                        <Link to="/">
+                            <div className="d-grid gap-2 col-6 mx-auto">
+                                <button type="button" className="btn btn-primary" style={{marginTop: "3rem"}}>Login
+                                </button>
+                            </div>
+                        </Link>
                     </div>
                 </div>
                 <div className="col-3"></div>

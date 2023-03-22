@@ -25,8 +25,12 @@ function App() {
                         <input type="text" className="form-control" placeholder="Room ID"/>
                     </div>
                     <div className="col-3">
-                        <button type="button" className="btn btn-primary" style={{marginRight:"1rem", marginLeft:"auto"}}>Random</button>
-                        <button type="button" className="btn btn-primary" style={{marginRight:"auto", marginLeft:"1rem"}}>Reverse</button>
+                        <button type="button" className="btn btn-primary"
+                                style={{marginRight: "1rem", marginLeft: "auto"}}>Random
+                        </button>
+                        <button type="button" className="btn btn-primary"
+                                style={{marginRight: "auto", marginLeft: "1rem"}}>Reverse
+                        </button>
                     </div>
                 </div>
             </div>
