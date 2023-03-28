@@ -40,4 +40,55 @@
 input {
   background-color: var(--bgColor);
   color: var(--txtColor);
+  border-radius: 8px;
+  width: 24rem;
+  height: 2.5rem;
+  margin-bottom: .25rem;
+  margin-left: .2rem;
+  margin-right: .2rem;
+}
+button {
+  background-color: #555555;
+  border: none;
+  color: white;
+  padding: .75rem 1rem;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.75rem;
+  margin-top: .5rem;
+  margin-left: .2rem;
+  margin-right: .2rem;
+}
+
+@media (max-width:1024px) {
+  :root {
+    font-size: 1.25rem;
+  }
+  input.main {
+    width:12rem;
+  }
+  input.else {
+    width:20rem;
+  }
+}
+
+label {
+  display:block;
+}
+
+button.long {
+  width:16rem;
+}
+
+button.medium {
+  width:8rem;
+}
+
+div.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
