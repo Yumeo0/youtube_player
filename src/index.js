@@ -22,9 +22,9 @@ function Logic() {
         <>
             <div style={{alignSelf: "end"}}>
                 <Link to="/Login">
-                    <button className="btn btn-primary">Login</button>
+                    <button>Login</button>
                 </Link>
-                <button type="button" className="btn btn-primary" style={{marginLeft: ".25rem"}}
+                <button type="button" style={{marginLeft: ".25rem"}}
                         onClick={() => setMode(!mode)}>Light/Dark
                 </button>
             </div>
