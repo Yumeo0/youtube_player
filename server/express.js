@@ -3,6 +3,7 @@ const ytpl = require('ytpl')
 const db = require('./db.js')
 const express = require('express')
 const app = express()
+app.use(express.json())
 const port = 3000
 
 /*
@@ -51,7 +52,13 @@ app.get('/youtube', async (req, res) => {
     });
     return;
   }
-  const video = await ytdl.getInfo(url)
+  let video = {};
+  try {
+    video = await ytdl.getBasicInfo(url)
+  } catch (err) {
+    console.error("Update node_modules/ytdl-core/lib/utils.js file. On line 63 replace /(^|[[{:;,])\\s?$/ with /(^|[[{:;,/])\\s?$/ otherwhise big error.");
+    return;
+  }
   res.send({
     "status": 200,
     "type": "video",
