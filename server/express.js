@@ -1,3 +1,4 @@
+const db = require('./db.js')
 const express = require('express')
 const app = express()
 const port = 3000
@@ -6,7 +7,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-// TODO: Connect do DB and create Account
+// TODO: Connect to DB and create Account
 // Check if User already exists!
 app.get('/register', (req, res) => {
   console.log(req.header("username"));
