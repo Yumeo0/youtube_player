@@ -3,6 +3,8 @@ const ytpl = require('ytpl')
 const db = require('./db.js')
 const express = require('express')
 const app = express()
+const cors = require('cors')
+app.use(cors())
 app.use(express.json())
 const port = 3000
 
