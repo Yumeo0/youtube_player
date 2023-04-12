@@ -59,6 +59,10 @@ app.get('/youtube', async (req, res) => {
     console.error("Update node_modules/ytdl-core/lib/utils.js file. On line 63 replace /(^|[[{:;,])\\s?$/ with /(^|[[{:;,/])\\s?$/ otherwhise big error.");
     return;
   }
+  video = {
+    "formats": video.formats,
+    "videoDetails":  video.videoDetails
+  }
   res.send({
     "status": 200,
     "type": "video",
