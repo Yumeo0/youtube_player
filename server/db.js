@@ -16,3 +16,15 @@ con.connect(function(err) {
     }
     console.log("Connected!");
 });
+
+export function insert(user, pass, passA) {
+    if(pass == passA) {
+    let sql = "INSERT INTO user (id, user, password) VALUES (0, ${user}, ${pass})"
+    con.query(sql, function(err, result) {
+        if (err) throw err;
+        console.log("1 record inserted");
+        });
+    }
+    else console.log("password != password");
+}
+

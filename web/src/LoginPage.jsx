@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 import React from "react";
 
 function LoginPage() {
-    return <div class="center">
+    return <div className="center">
         <div>
             <label>Username</label>
             <input type="text" placeholder="username"/>
@@ -13,17 +13,17 @@ function LoginPage() {
         </div>
         <div>
             <Link to="/">
-                <button class="medium">Login</button>
+                <button className="medium">Login</button>
             </Link>
         </div>
         <div>
             <Link to="/signup">
-                <button class="medium">Sign Up</button>
+                <button className="medium">Sign Up</button>
             </Link>
         </div>
         <div>
             <Link to="/">
-                <button class="long">Login as guest</button>
+                <button className="long">Login as guest</button>
             </Link>
         </div>
     </div>

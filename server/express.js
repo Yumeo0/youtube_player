@@ -1,12 +1,12 @@
+const {insert}=require('./db.js')
 const ytdl = require('ytdl-core')
 const ytpl = require('ytpl')
-const db = require('./db.js')
 const express = require('express')
 const app = express()
 app.use(express.json())
 const port = 3000
 
-/*
+/*t
   Update node_modules/ytdl-core/lib/utils.js file. 
   On line 63 replace /(^|[[{:;,])\s?$/ with /(^|[[{:;,/])\s?$/ otherwhise big error.
 */
@@ -18,8 +18,10 @@ app.get('/', (req, res) => {
 // TODO: Connect to DB and create Account
 // Check if User already exists!
 app.get('/register', (req, res) => {
-  console.log(req.header("username"));
-  console.log(req.header("password"));
+  const username = req.header("username");
+  const password = req.header("password");
+  const passwordA = req.header("passwordA");
+  insert(username, password, passwordA);
   res.send({
     status: "err"
   })

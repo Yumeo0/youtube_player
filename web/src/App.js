@@ -5,7 +5,7 @@ function App() {
     const {mode} = useOutletContext();
     return (
         <div className="App">
-            <div class="center">
+            <div className="center">
                 <div>
                     <div>
                         video playlist
@@ -13,8 +13,8 @@ function App() {
                 </div>
                 <div>
                     <div>
-                        <input type="text" class="main" placeholder="Youtube playlist id/link"/>
-                        <input type="text" class="main" placeholder="Room ID"/>
+                        <input type="text" className="main" placeholder="Youtube playlist id/link"/>
+                        <input type="text" className="main" placeholder="Room ID"/>
                         <button type="button">Random</button>
                         <button type="button">Reverse</button>
                     </div>
