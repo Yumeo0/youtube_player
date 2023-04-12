@@ -8,7 +8,7 @@ function SignUp() {
 
 
     async function signUp() {
-        fetch("http://localhost:3000", {
+        fetch("http://localhost:3001/register", {
             headers: {
                 "username": user,
                 "password": pass,

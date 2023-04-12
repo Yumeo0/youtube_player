@@ -6,7 +6,26 @@ const app = express()
 const cors = require('cors')
 app.use(cors())
 app.use(express.json())
-const port = 3000
+const port = 3001
+
+const mysql = require('mysql2');
+
+const con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "secret",
+  database: "youtubePlayerDB",
+  port: 3306
+});
+
+con.connect(function(err) {
+  if (err) {
+    //console.error(err);
+    console.error("Couldn't connect to database");
+    return;
+  }
+  console.log("Connected!");
+});
 
 /*t
   Update node_modules/ytdl-core/lib/utils.js file. 
@@ -23,7 +42,7 @@ app.get('/register', (req, res) => {
   const username = req.header("username");
   const password = req.header("password");
   const passwordA = req.header("passwordA");
-  insert(username, password, passwordA);
+  insert(username, password, passwordA, con);
   res.send({
     status: "err"
   })
