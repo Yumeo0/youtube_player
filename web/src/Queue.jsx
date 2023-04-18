@@ -14,7 +14,7 @@ function Queue ({ setRef }) {
   }, [])
 
   const add = element => {
-    let newQueue = queue;
+    let newQueue = queue
     if (Array.isArray(element)) {
       console.log('array')
       newQueue = queue.concat(element)
