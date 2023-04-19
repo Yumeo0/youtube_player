@@ -70,7 +70,7 @@ app.get('/youtube', async (req, res) => {
       res.send({ status: 400 })
       return
     }
-    const playlist = await ytpl(url)
+    const playlist = await ytpl(url, {limit: Infinity})
     res.send({
       status: 200,
       type: 'playlist',
@@ -80,7 +80,7 @@ app.get('/youtube', async (req, res) => {
   }
   let video = {}
   try {
-    video = await ytdl.getBasicInfo(url)
+    video = await ytdl.getInfo(url)
   } catch (err) {
     console.error(err)
     return

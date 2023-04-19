@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import {createBrowserRouter, createRoutesFromElements, RouterProvider, Outlet, Route, Link} from "react-router-dom";
-import LoginPage from "./LoginPage.jsx";
-import SignUp from "./SignUp.jsx";
-import Failed from "./failed";
+import App from './Pages/App.jsx';
+import LoginPage from "./Pages/LoginPage.jsx";
+import SignUp from "./Pages/SignUp.jsx";
+import Failed from "./Pages/failed";
 
 function Logic() {
     const [mode, setMode] = useState(true);
@@ -20,14 +20,14 @@ function Logic() {
 
     return (
         <>
-            <div style={{alignSelf: "end"}}>
+            <nav style={{alignSelf: "end"}}>
                 <Link to="/Login">
                     <button>Login</button>
                 </Link>
                 <button type="button" style={{marginLeft: ".25rem"}}
                         onClick={() => setMode(!mode)}>Light/Dark
                 </button>
-            </div>
+            </nav>
             <Outlet context={mode}/>
         </>
     );
