@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom'
 import React, { useState } from 'react'
 
-function LoginPage () {
+function LoginPage() {
   const [user, setUser] = useState('')
   const [pass, setPass] = useState('')
 
-  async function login () {
+  async function login() {
     fetch('http://localhost:3001/login', {
       headers: {
         username: user,
         password: pass
       }
+    }).then(respone => respone.json()).then(json => {
+      if (json.status == 200) window.location.href = "/"
     })
   }
 
@@ -33,11 +35,9 @@ function LoginPage () {
         />
       </div>
       <div>
-        <Link to='/'>
-          <button className='medium' onClick={() => login()}>
-            Login
-          </button>
-        </Link>
+        <button className='medium' onClick={() => login()}>
+          Login
+        </button>
       </div>
       <div>
         <Link to='/signup'>
@@ -45,7 +45,7 @@ function LoginPage () {
         </Link>
       </div>
       <div>
-        <Link to='/'>
+        <Link to="/">
           <button className='long'>Login as guest</button>
         </Link>
       </div>
