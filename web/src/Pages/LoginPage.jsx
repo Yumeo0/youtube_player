@@ -27,7 +27,7 @@ function LoginPage () {
       <div>
         <label>Password</label>
         <input
-          type='text'
+          type='password'
           placeholder='password'
           onInput={e => setPass(e.target.value)}
         />

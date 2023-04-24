@@ -1,22 +1,66 @@
-function insert (user, pass, passA, con) {
-  if (pass == passA) {
-    let sql = `INSERT INTO User (id, Username, Password) VALUES (0, "${user}", "${pass}");`
-    con.query(sql, function (err, result) {
-      if (err) throw err
-      console.log('1 record inserted')
-    })
-  } else console.log('password != password')
+const bcrypt = require("bcrypt");
+const {v4: uuidv4} = require('uuid');
+
+function checkUsername(username, con) {
+    return new Promise(async function (resolve, reject) {
+        resolve((await getUser(username, con)).count > 0);
+    });
+}
+
+function getUser(username, con) {
+    return new Promise(function (resolve, reject) {
+        // query the database to check if the username exists
+        con.query(`SELECT *
+                   FROM User
+                   WHERE username = ?`, [username], function (error, results, fields) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results[0]);
+            }
+        });
+    });
+}
+
+function insert(user, pass, passA, con) {
+    if (pass == passA) {
+        checkUsername(user, con).then(function (usernameExists) {
+            if (!usernameExists) {
+                bcrypt.hash(pass, 10, function (err, hash) {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        let sql = `INSERT INTO User (id, Username, Password)
+                                   VALUES (0, "${user}", "${hash}");`
+                        con.query(sql, function (err, result) {
+                            if (err) throw err
+                            console.log('1 record inserted')
+                        })
+                    }
+                })
+            } else {
+                console.log("username is already taken")
+            }
+        }).catch(function (error) {
+            console.error(error)
+        });
+
+    } else console.log('password != passwordA')
 }
 
 async function login(user, pass, con) {
-  let sql = `SELECT * FROM User WHERE Username="${user}" AND Password= "${pass}";`
-  await con.query(sql, function (err, result) {
-    if (err) {
-      console.log(err)
-      return { status: 400 }
-    }
-    return result.length == 1 ? { status: 200, id: result[0].id } : { status: 400 }
-  })
+    const userObj = await getUser(user, con);
+    bcrypt.compare(pass, userObj.password).then(function (matches) {
+        if (matches)
+            return {
+                status: 200,
+                code: uuidv4(),
+                id: userObj.id
+            }
+        else return {
+            status: 400
+        }
+    })
 }
 
-module.exports = { insert, login }
+module.exports = {insert, login}

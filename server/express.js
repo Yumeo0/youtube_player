@@ -13,7 +13,7 @@ const mysql = require('mysql2')
 const con = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '',
+  password: 'secret',
   database: 'youtubePlayerDB',
   port: 3306
 })
