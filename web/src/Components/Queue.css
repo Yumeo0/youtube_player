@@ -1,0 +1,10 @@
+.queue {
+  width: 25rem;
+  height: 100%;
+  overflow: hidden;
+}
+
+.Videos {
+  overflow-y: scroll;
+  height: 100%;
+}

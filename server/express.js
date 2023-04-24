@@ -1,4 +1,4 @@
-const {insert}=require('./db.js')
+const { insert, login } = require('./db.js')
 const ytdl = require('ytdl-core')
 const ytpl = require('ytpl')
 const express = require('express')
@@ -8,29 +8,24 @@ app.use(cors())
 app.use(express.json())
 const port = 3001
 
-const mysql = require('mysql2');
+const mysql = require('mysql2')
 
 const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "secret",
-  database: "youtubePlayerDB",
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'youtubePlayerDB',
   port: 3306
-});
+})
 
-con.connect(function(err) {
+con.connect(function (err) {
   if (err) {
     //console.error(err);
-    console.error("Couldn't connect to database");
-    return;
+    console.error("Couldn't connect to database")
+    return
   }
-  console.log("Connected!");
-});
-
-/*t
-  Update node_modules/ytdl-core/lib/utils.js file. 
-  On line 63 replace /(^|[[{:;,])\s?$/ with /(^|[[{:;,/])\s?$/ otherwhise big error.
-*/
+  console.log('Connected!')
+})
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -39,12 +34,12 @@ app.get('/', (req, res) => {
 // TODO: Connect to DB and create Account
 // Check if User already exists!
 app.get('/register', (req, res) => {
-  const username = req.header("username");
-  const password = req.header("password");
-  const passwordA = req.header("passwordA");
-  insert(username, password, passwordA, con);
+  const username = req.header('username')
+  const password = req.header('password')
+  const passwordA = req.header('passwordA')
+  insert(username, password, passwordA, con)
   res.send({
-    status: "err"
+    status: 200
   })
 })
 
@@ -52,46 +47,54 @@ app.get('/register', (req, res) => {
 // Generate Random string and associate it with the user id
 // Bsp: logins.push({"randomString": 1});
 const logins = []
-app.get('/login', (req, res) => {
-  console.log(req.header("username"));
-  console.log(req.header("password"));
-  res.send('Hello World!')
+app.get('/login', async (req, res) => {
+  const username = req.header('username')
+  const password = req.header('password')
+  const response = await login(username, password, con)
+  if(response?.code) {
+    logins.push([response.code, response.id])
+    console.log("logged in", logins[logins.length - 1])
+  }
+  res.send({
+    "status": response.status,
+    "code": response?.code
+  })
 })
 
 app.get('/youtube', async (req, res) => {
-  const url = req.header("url");
-  console.log("Link:", req.header("url"));
+  const url = req.header('url')
+  console.log('Link:', req.header('url'))
 
-  if(!ytdl.validateID(url) && !ytdl.validateURL(url)) {
-    if(!ytpl.validateID(url)) {
-      res.send({"status": 400});
-      return;
+  if (!ytdl.validateID(url) && !ytdl.validateURL(url)) {
+    if (!ytpl.validateID(url)) {
+      res.send({ status: 400 })
+      return
     }
-    const playlist = await ytpl(url);
+    const playlist = await ytpl(url, {limit: Infinity})
     res.send({
-      "status": 200,
-      "type": "playlist",
-      "playlist": playlist
-    });
-    return;
+      status: 200,
+      type: 'playlist',
+      playlist: playlist
+    })
+    return
   }
-  let video = {};
+  let video = {}
   try {
-    video = await ytdl.getBasicInfo(url)
+    video = await ytdl.getInfo(url)
   } catch (err) {
-    console.error("Update node_modules/ytdl-core/lib/utils.js file. On line 63 replace /(^|[[{:;,])\\s?$/ with /(^|[[{:;,/])\\s?$/ otherwhise big error.");
-    return;
+    console.error(err)
+    return
   }
   video = {
-    "formats": video.formats,
-    "videoDetails":  video.videoDetails
+    formats: video.formats,
+    videoDetails: video.videoDetails
   }
   res.send({
-    "status": 200,
-    "type": "video",
-    "video": video
-  });
-  return;
+    status: 200,
+    type: 'video',
+    video: video
+  })
+  return
 })
 
 app.listen(port, () => {
