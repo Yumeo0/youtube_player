@@ -13,7 +13,7 @@ function SignUp() {
                 "username": user,
                 "password": pass,
                 "passwordA": passA
-            }
+            }.then(respone => respone.json()).then(json => {if(json.status==200) window.location.href("/")})
         });
     }
 
@@ -34,9 +34,7 @@ function SignUp() {
                 <input type="password" placeholder="password" onInput={e => setPassA((e.target.value))}/>
             </div>
             <div>
-                <Link to="/">
                     <button type="button" className="long" onClick={e => signUp()}>Sign up</button>
-                </Link>
             </div>
         </div>);
 }

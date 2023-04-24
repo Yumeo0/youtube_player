@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab5ed6a9-ffe6-492a-82e5-93604e7b050b" name="Changes" comment="signuplogic (unfinished)">
+    <list default="true" id="ab5ed6a9-ffe6-492a-82e5-93604e7b050b" name="Changes" comment="implemetation from the signup logic">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]2/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_2.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/db.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/express.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/express.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/SignUp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/SignUp.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +46,8 @@
       <option name="presentableId" value="Default" />
       <updated>1681206159994</updated>
       <workItem from="1681206165560" duration="4830000" />
-      <workItem from="1681290862770" duration="5476000" />
+      <workItem from="1681290862770" duration="5677000" />
+      <workItem from="1682328818812" duration="729000" />
     </task>
     <task id="LOCAL-00001" summary="change of project structure">
       <created>1681206228377</created>
@@ -71,7 +77,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681302013401</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="implemetation from the signup logic">
+      <created>1681317974513</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1681317974513</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -93,6 +106,7 @@
     <MESSAGE value="change of project structure" />
     <MESSAGE value="Database connection" />
     <MESSAGE value="signuplogic (unfinished)" />
-    <option name="LAST_COMMIT_MESSAGE" value="signuplogic (unfinished)" />
+    <MESSAGE value="implemetation from the signup logic" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemetation from the signup logic" />
   </component>
 </project>
