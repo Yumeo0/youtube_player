@@ -1,8 +1,9 @@
 import './App.css'
 import { useOutletContext } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+
 import Queue from '../Components/Queue.jsx'
 import VideoPlayer from '../Components/VideoPlayer.jsx'
-import { useState, useEffect } from 'react'
 import QueueManager from '../QueueManager.js'
 
 function App () {
@@ -20,6 +21,16 @@ function App () {
     setQueue(queue)
   }
 
+  const nextVideo = () => {
+    if(currentVideo + 1 < queue.length)
+    setCurrentVideo(currentVideo + 1)
+  }
+
+  const onPreviousVideo = () => {
+    if(currentVideo - 1 > 0)
+    setCurrentVideo(currentVideo - 1)
+  }
+
   const search = async url => {
     let res = await fetch(`http://localhost:3001/youtube`, {
       headers: { url: url }
@@ -33,7 +44,12 @@ function App () {
   return (
     <div className='App center flex-row'>
       <div className='h-100'>
-        <VideoPlayer video={queue[currentVideo]} />
+        <VideoPlayer 
+          video={queue[currentVideo]} 
+          onVideoEnd={nextVideo}
+          onSkipVideo={nextVideo}
+          onPreviousVideo={onPreviousVideo}
+        />
           <input
             type='text'
             className='main'
