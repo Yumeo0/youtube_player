@@ -18,7 +18,6 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [loop, setLoop] = useState(false);
   const [isTabFocused, setIsTabFocused] = useState(true);
-  const [videoEnded, setVideoEnded] = useState(false);
 
   // Video element state
   const [videoPlaying, setVideoPlaying] = useState(false);
@@ -67,7 +66,6 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
     document.addEventListener("visibilitychange", function (event) {
       setIsTabFocused(!document.hidden);
     });
-    setVideoEnded(false);
   }, [])
 
   function onVideoReady() {
@@ -141,12 +139,11 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
   }
 
   function videoEnd() {
-    setVideoEnded(true);
-    if(videoEnded) return;
-    if (loop)
+    if (loop){
       audio.currentTime = 0;
-    else
+    } else {
       onVideoEnd();
+    }
   }
 
   return (
@@ -167,7 +164,7 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
             playing={videoPlaying}
             onReady={() => onVideoReady()}
             onBufferEnd={() => onBufferEnd()}
-            onEnded={() => videoEnd()}
+            //onEnded={() => videoEnd()}
             width={"100%"}
             height={"100%"}
             ref={videoRef}
@@ -175,7 +172,6 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
           />
         </div>
         <div className='backdrop'></div>
-        <input type='range' min="0" max={duration} value={currentTime} onChange={e => seekTo(e)} id="progress"></input>
         <div className='VideoControls'>
           <box-icon name='skip-previous' color="white" onClick={() => previous()}></box-icon>
           <box-icon name={playing ? 'pause' : 'play'} color="white" onClick={() => play()}></box-icon>
@@ -185,6 +181,7 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
           <box-icon name='volume-full' color="white" type='solid' class="volume"></box-icon>
           <input type='range' min="0" max="100" id="volume" onChange={e => changeVolume(e)}></input>
         </div>
+        <input type='range' min="0" max={duration} value={currentTime} onChange={e => seekTo(e)} id="progress"></input>
       </div>
     </div>
   );
