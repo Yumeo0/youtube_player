@@ -42,7 +42,7 @@ function App () {
   }
 
   return (
-    <div className='App center flex-row'>
+    <div className='App center flex'>
       <div className='h-100'>
         <VideoPlayer 
           video={queue[currentVideo]} 
@@ -59,7 +59,13 @@ function App () {
             }}
           />
       </div>
-      <Queue queue={queue} randomize={queueManager?.randomize} reverse={queueManager?.reverse} setCurrentVideo={setCurrentVideo}/>
+      <Queue 
+        queue={queue} 
+        randomize={() => queueManager?.randomize()} 
+        reverse={() => queueManager?.reverse()} 
+        currentVideo={currentVideo} 
+        setCurrentVideo={setCurrentVideo}
+      />
     </div>
   )
 }

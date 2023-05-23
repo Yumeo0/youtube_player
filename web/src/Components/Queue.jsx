@@ -1,6 +1,6 @@
 import './Queue.css'
 
-function Queue ({ queue, randomize, reverse, setCurrentVideo }) {
+function Queue ({ queue, randomize, reverse, currentVideo, setCurrentVideo }) {
   return (
     <div className='queue'>
       <div>
@@ -17,8 +17,12 @@ function Queue ({ queue, randomize, reverse, setCurrentVideo }) {
       </div>
       <div className="Videos">
         {queue.map((video, index) => (
-          <div className='Video' key={video.url} onClick={() => setCurrentVideo(index)}>
-            <p>{video.title}</p>
+          <div className={'Video' + (currentVideo === index ? " Playing" : "")} key={video.url+"_"+index} onClick={() => setCurrentVideo(index)}>
+            <img loading="lazy" src={video.bestThumbnail.url} alt={video.title + " Thumbnail"}/>
+            <div>
+              <p>{video.title}</p>
+              <a href={video.author.url} target="_blank" rel="noreferrer">{video.author.name}</a>
+            </div>
           </div>
         ))}
       </div>

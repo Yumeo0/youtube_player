@@ -18,6 +18,7 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [loop, setLoop] = useState(false);
   const [isTabFocused, setIsTabFocused] = useState(true);
+  const [videoEnded, setVideoEnded] = useState(false);
 
   // Video element state
   const [videoPlaying, setVideoPlaying] = useState(false);
@@ -66,6 +67,7 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
     document.addEventListener("visibilitychange", function (event) {
       setIsTabFocused(!document.hidden);
     });
+    setVideoEnded(false);
   }, [])
 
   function onVideoReady() {
@@ -81,7 +83,7 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
       setVideoReady(true);
       if (playing)
         resume();
-    }, 250)
+    }, 350)
   }
 
   function resume() {
@@ -89,7 +91,7 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
       const wait = () => {
         setTimeout(() => {
           resume();
-        }, 250)
+        }, 350)
       }
       wait();
     } else {
@@ -139,6 +141,8 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
   }
 
   function videoEnd() {
+    setVideoEnded(true);
+    if(videoEnded) return;
     if (loop)
       audio.currentTime = 0;
     else
@@ -152,6 +156,7 @@ function VideoPlayer({ video, onVideoEnd, onSkipVideo, onPreviousVideo }) {
         src={audioUrls[audioUrls.length - 1]?.url}
         onTimeUpdate={e => onProgress(e)}
         preload="auto"
+        onEnded={() => videoEnd()}
       //controls 
       />
       <div className='player'>

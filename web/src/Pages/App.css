@@ -10,10 +10,6 @@
 
 .flex {
   display: flex;
-}
-
-.flex-row {
-  display: flex;
   flex-direction: row;
 }
 
@@ -47,18 +43,6 @@ button {
   margin-right: .2rem;
 }
 
-@media (max-width:1024px) {
-  :root {
-    font-size: 1.25rem;
-  }
-  input.main {
-    width:12rem;
-  }
-  input.else {
-    width:20rem;
-  }
-}
-
 label {
   display:block;
 }
@@ -73,7 +57,29 @@ button.medium {
 
 div.center {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+@media (max-width:1024px) {
+  :root {
+    font-size: 1.25rem;
+  }
+  input.main {
+    width:12rem;
+  }
+  input.else {
+    width:20rem;
+  }
+
+  .flex {
+    display: flex;
+    flex-direction: column;
+  }
+  #root {
+    height: fit-content;
+  }
+  #App {
+    height: fit-content;
+  }
 }

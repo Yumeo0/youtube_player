@@ -34,3 +34,7 @@ code {
 nav {
   height: 4rem;
 }
+
+p {
+  margin: 0px;
+}

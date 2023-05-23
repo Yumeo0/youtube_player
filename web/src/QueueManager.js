@@ -10,6 +10,7 @@ class QueueManager {
 
   constructor (onChangeHandle) {
     this.#onChangeHandle = onChangeHandle
+    this.#isRandom = false
   }
 
   add (element) {
