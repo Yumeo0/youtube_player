@@ -16,6 +16,14 @@ function App () {
     setQueueManager(new QueueManager(onQueueChange))
   }, [])
 
+  useEffect(() => {
+    const playingVideo = document.querySelector(".Video.Playing");
+    if(playingVideo == null) return;
+    const queue = document.getElementsByClassName("Videos")[0];
+    queue.scrollTop = playingVideo.offsetTop;
+    console.log(playingVideo.offsetTop, queue.scrollTop)
+  }, [currentVideo])
+
   const onQueueChange = queue => {
     console.log(queue)
     setQueue(queue)
