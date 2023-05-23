@@ -16,7 +16,9 @@
   border-radius: 20px;
   padding: 0px 5px 0px 8px;
 }
-
+.Video:hover {
+  background-color: #555555;
+}
 .Video.Playing {
   background-color: #555555;
 }
