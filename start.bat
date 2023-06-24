@@ -1,2 +1,3 @@
-start powershell -noexit -Command "cd server; yarn dev
-start powershell -noexit -Command "cd web; yarn dev
+git pull
+start powershell -noexit -Command "cd server; yarn; yarn dev"
+start powershell -noexit -Command "cd web; yarn; yarn dev"
