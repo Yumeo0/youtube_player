@@ -1,38 +1,40 @@
+import * as types from './types';
+
 class QueueManager {
-  #fixedQueue = []
-  #queue = []
-  #reversedQueue = []
+  #fixedQueue = [] as types.Queue
+  #queue = [] as types.Queue
+  #reversedQueue = [] as types.Queue
 
   #isReversed = false
   #isRandom = false
 
   #onChangeHandle
 
-  constructor (onChangeHandle) {
+  constructor (onChangeHandle: Function) {
     this.#onChangeHandle = onChangeHandle
     this.#isRandom = false
   }
 
-  add (element) {
-    if (element.type === 'video') {
-      let video = element.video;
+  add (element: types.QueueElement) {
+    if (element.type.toLowerCase().includes("video")) {
+      let rawVideo: types.RawVideo = element.video;
 
-      video = {
-        title: video.videoDetails.title,
-        author: video.videoDetails.author,
-        durationSec: video.videoDetails.durationSec,
-        url: video.videoDetails.video_url,
-        bestThumbnail: video.videoDetails.bestThumbnail,
-        thumbnails: video.videoDetails.thumbnails,
+      let video: types.Video = {
+        title: rawVideo.videoDetails.title,
+        author: rawVideo.videoDetails.author,
+        durationSec: rawVideo.videoDetails.durationSec,
+        url: rawVideo.videoDetails.video_url,
+        bestThumbnail: rawVideo.videoDetails.bestThumbnail,
+        thumbnails: rawVideo.videoDetails.thumbnails,
       }
 
       this.#fixedQueue.push(video)
       this.#queue.push(video)
       this.#queue = [...this.#queue]
-    } else if (element.type === 'playlist') {
+    } else if (element.type.toLowerCase().includes("playlist")) {
       let playlist = element.playlist.items;
 
-      let videos = []
+      let videos: types.Queue = []
 
       playlist.forEach(video => {
         videos.push({
@@ -84,7 +86,7 @@ class QueueManager {
   }
 }
 
-function shuffle (array) {
+function shuffle (array: types.Queue) {
   let arr = [...array]
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))

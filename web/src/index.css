@@ -11,18 +11,13 @@ body {
   height: 100vh;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
 :root {
   --bgColor: white;
   --txtColor: black;
   font-size: 1.5vw;
 }
 
-#root {
+#app {
   display:flex;
   flex-direction: column;
   padding-top:.25rem;

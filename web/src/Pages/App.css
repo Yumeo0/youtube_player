@@ -1,16 +1,9 @@
 .App {
   text-align: center;
   height: calc(100% - 4rem);
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.flex {
   display: flex;
   flex-direction: row;
+  align-items:start;
 }
 
 .h-100{
@@ -26,6 +19,7 @@ input {
   margin-bottom: .25rem;
   margin-left: .2rem;
   margin-right: .2rem;
+  font-size: 1rem;
 }
 
 button {
@@ -69,7 +63,7 @@ div.center {
     display: flex;
     flex-direction: column;
   }
-  #root {
+  #app {
     height: fit-content;
   }
   #App {

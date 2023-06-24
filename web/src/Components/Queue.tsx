@@ -1,6 +1,8 @@
+import * as types from '../types';
+
 import './Queue.css'
 
-function Queue ({ queue, randomize, reverse, currentVideo, setCurrentVideo }) {
+function Queue ({ queue, randomize, reverse, currentVideo, setCurrentVideo }: {queue: types.Queue, randomize: Function, reverse: Function, currentVideo: number, setCurrentVideo: Function}) {
   return (
     <div className='queue'>
       <div>
@@ -16,7 +18,7 @@ function Queue ({ queue, randomize, reverse, currentVideo, setCurrentVideo }) {
         </button>
       </div>
       <div className="Videos">
-        {queue.map((video, index) => (
+        {queue.map((video, index: number) => (
           <div className={'Video' + (currentVideo === index ? " Playing" : "")} key={video.url+"_"+index} onClick={() => setCurrentVideo(index)}>
             <img loading="lazy" src={video.thumbnails[video.thumbnails.length-1].url} alt={video.title + " Thumbnail"}/>
             <div>

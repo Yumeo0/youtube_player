@@ -4,6 +4,10 @@
   overflow: hidden;
 }
 
+.queue button {
+  margin: 0.5rem;
+}
+
 .Videos {
   overflow-y: scroll;
   position: relative;
