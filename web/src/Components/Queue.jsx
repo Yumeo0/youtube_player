@@ -18,7 +18,7 @@ function Queue ({ queue, randomize, reverse, currentVideo, setCurrentVideo }) {
       <div className="Videos">
         {queue.map((video, index) => (
           <div className={'Video' + (currentVideo === index ? " Playing" : "")} key={video.url+"_"+index} onClick={() => setCurrentVideo(index)}>
-            <img loading="lazy" src={video.bestThumbnail.url} alt={video.title + " Thumbnail"}/>
+            <img loading="lazy" src={video.thumbnails[video.thumbnails.length-1].url} alt={video.title + " Thumbnail"}/>
             <div>
               <p>{video.title}</p>
               <a href={video.author.url} target="_blank" rel="noreferrer">{video.author.name}</a>
