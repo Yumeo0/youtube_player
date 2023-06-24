@@ -20,25 +20,25 @@
   align-items: center;
 }
 
-.VideoPlayer box-icon:first-of-type {
+.VideoPlayer .icon:first-of-type {
   margin-left: 1rem;
 }
 
-.VideoPlayer box-icon {
+.VideoPlayer .icon {
   margin-left: 0.5rem;
   margin-right: 0.25rem;
   height: 1.5rem;
   width: 1.5rem;
 }
 
-.VideoPlayer box-icon.volume {
+.VideoPlayer .icon.volume {
   height: 1.25rem;
   width: 1.25rem;
   margin-left: 1.5rem;
   margin-right: 0.2rem;
 }
 
-.VideoPlayer box-icon.loop {
+.VideoPlayer .icon.loop {
   margin-left: 1.5rem;
   height: 1.25rem;
   width: 1.25rem;

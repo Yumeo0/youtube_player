@@ -1,8 +1,38 @@
 import { useState, useEffect, useRef } from "preact/hooks";
+import { signal } from "@preact/signals";
 import ReactPlayer from "react-player";
+import {
+  BiSkipPrevious,
+  BiSkipNext,
+  BiPause,
+  BiPlay,
+  BiVolumeFull,
+  BiRevision,
+  BiRotateRight,
+} from "react-icons/bi";
 import * as types from "../types";
 
 import "./VideoPlayer.css";
+import { TargetedEvent } from "preact/compat";
+
+const audio = signal(undefined as unknown as HTMLAudioElement)
+
+// Urls and selected Quality
+const videoQuality = signal(0);
+const audioQuality = signal(0);
+const videoUrls = signal([] as types.Format[]);
+const audioUrls = signal([] as types.Format[]);
+
+// Player state
+const playing = signal(false);
+const isTabFocused = signal(true);
+const duration = signal(0);
+const currentTime = signal(0);
+const loop = signal(false);
+
+// Video element state
+const videoPlaying = signal(false);
+const videoReady = signal(false);
 
 function VideoPlayer({
   video,
@@ -15,24 +45,7 @@ function VideoPlayer({
   onSkipVideo: Function;
   onPreviousVideo: Function;
 }) {
-  const [audio, setAudio] = useState(undefined as unknown as HTMLAudioElement);
-
-  // Urls and selected Quality
-  const [videoQuality, setVideoQuality] = useState(0);
-  const [audioQuality, setAudioQuality] = useState(0);
-  const [videoUrls, setVideoUrls] = useState([] as types.Format[]);
-  const [audioUrls, setAudioUrls] = useState([] as types.Format[]);
-
-  // Player state
-  const [playing, setPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [loop, setLoop] = useState(false);
-  const [isTabFocused, setIsTabFocused] = useState(true);
-
   // Video element state
-  const [videoPlaying, setVideoPlaying] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef(null as unknown as ReactPlayer);
 
   useEffect(() => {
@@ -53,52 +66,61 @@ function VideoPlayer({
           let videoFormats = formats.filter((format: types.Format) => {
             return format.mimeType.includes("video/mp4");
           });
-          videoFormats = videoFormats.sort((a: types.Format, b: types.Format) => {
-            return a.bitrate - b.bitrate;
-          });
-          setVideoUrls(videoFormats);
+          videoFormats = videoFormats.sort(
+            (a: types.Format, b: types.Format) => {
+              return a.bitrate - b.bitrate;
+            }
+          );
+          videoUrls.value = videoFormats;
 
           let audioFormats = formats.filter((format: types.Format) => {
             return format.mimeType.includes("audio");
           });
-          audioFormats = audioFormats.sort((a: types.Format, b: types.Format) => {
-            return a.bitrate - b.bitrate;
-          });
-          setAudioUrls(audioFormats);
-          setDuration(video.videoDetails.lengthSeconds);
+          audioFormats = audioFormats.sort(
+            (a: types.Format, b: types.Format) => {
+              return a.bitrate - b.bitrate;
+            }
+          );
+          audioUrls.value = audioFormats;
+          duration.value = video.videoDetails.lengthSeconds;
         });
   }, [video]);
 
   useEffect(() => {
-    const audio = document.getElementById("audio") as HTMLAudioElement;
-    if(audio == null) return;
-    setAudio(audio);
-    audio.volume = 0.05;
-    const volumeSlider: HTMLInputElement = document.getElementById("volume") as HTMLInputElement;
-    if(volumeSlider == null) return;
-    volumeSlider.value = "5"
+    const audioElement = document.getElementById("audio") as HTMLAudioElement;
+    if (audioElement == null) return;
+    audio.value = audioElement;
+    audio.value.volume = 0.05;
+    const volumeSlider: HTMLInputElement = document.getElementById(
+      "volume"
+    ) as HTMLInputElement;
+    if (volumeSlider == null) return;
+    volumeSlider.value = "5";
 
     document.addEventListener("visibilitychange", function () {
-      setIsTabFocused(!document.hidden);
+      isTabFocused.value = !document.hidden;
     });
   }, []);
 
   function onVideoReady() {
+    console.log("onVideoReady()");
     setTimeout(() => {
-      setVideoReady(true);
-      if (playing) resume();
-    }, 250);
+      videoReady.value = true;
+      if (playing.value) resume();
+    }, 350);
   }
 
   function onBufferEnd() {
+    console.log("onBufferEnd()");
     setTimeout(() => {
-      setVideoReady(true);
-      if (playing) resume();
+      videoReady.value = true;
+      if (playing.value) resume();
     }, 350);
   }
 
   function resume() {
-    if (!videoReady) {
+    console.log("resume()");
+    if (!videoReady.value) {
       const wait = () => {
         setTimeout(() => {
           resume();
@@ -106,37 +128,48 @@ function VideoPlayer({
       };
       wait();
     } else {
-      setVideoPlaying(true);
-      audio.play();
+      videoPlaying.value = true;
+      audio.value.play();
     }
   }
 
   function pause() {
-    setVideoPlaying(false);
-    audio.pause();
+    console.log("pause()");
+    videoPlaying.value = false;
+    audio.value.pause();
   }
 
   function play() {
-    setPlaying(!playing);
-    if (!playing) resume();
+    console.log("play()");
+    playing.value = !playing.value;
+    if (playing.value) resume();
     else pause();
   }
 
   function skip() {
+    console.log("skip()");
     pause();
     onSkipVideo();
   }
 
   function previous() {
+    console.log("previous()");
     pause();
     onPreviousVideo();
   }
 
-  function onProgress(e) {
-    const time = e.target.currentTime;
-    setCurrentTime(time);
+  function onProgress(e: TargetedEvent) {
+    if (e.target == null) return;
+    const player = e.target as HTMLAudioElement;
+    const time = player.currentTime;
+    currentTime.value = time;
 
-    if (!isTabFocused || videoRef.current == null) return;
+    if (
+      !isTabFocused.value ||
+      videoRef.current == null ||
+      videoRef.current.getCurrentTime() == null
+    )
+      return;
     if (
       videoRef.current.getCurrentTime() < time - 0.25 ||
       videoRef.current.getCurrentTime() > time + 0.25
@@ -146,17 +179,21 @@ function VideoPlayer({
     }
   }
 
-  function changeVolume(e) {
-    audio.volume = e.target.value / 100;
+  function changeVolume(e: TargetedEvent) {
+    if (e.target == null) return;
+    const input = e.target as HTMLInputElement;
+    audio.value.volume = parseFloat(input.value) / 100;
   }
 
-  function seekTo(e) {
-    audio.currentTime = e.target.value;
+  function seekTo(e: TargetedEvent) {
+    if (e.target == null) return;
+    const input = e.target as HTMLInputElement;
+    audio.value.currentTime = parseFloat(input.value);
   }
 
   function videoEnd() {
-    if (loop) {
-      audio.currentTime = 0;
+    if (loop.value) {
+      audio.value.currentTime = 0;
     } else {
       onVideoEnd();
     }
@@ -166,7 +203,7 @@ function VideoPlayer({
     <div className="VideoPlayer">
       <audio
         id="audio"
-        src={audioUrls[audioUrls.length - 1]?.url}
+        src={audioUrls.value[audioUrls.value.length - 1]?.url}
         onTimeUpdate={(e) => onProgress(e)}
         preload="auto"
         onEnded={() => videoEnd()}
@@ -175,9 +212,8 @@ function VideoPlayer({
       <div className="player">
         <div onClick={() => play()}>
           <ReactPlayer
-            url={videoUrls[videoUrls.length - 1]?.url}
-            onPlay={() => resume()}
-            playing={videoPlaying}
+            url={videoUrls.value[videoUrls.value.length - 1]?.url}
+            playing={videoPlaying.value}
             onReady={() => onVideoReady()}
             onBufferEnd={() => onBufferEnd()}
             //onEnded={() => videoEnd()}
@@ -189,35 +225,45 @@ function VideoPlayer({
         </div>
         <div className="backdrop"></div>
         <div className="VideoControls">
-          <box-icon
-            name="skip-previous"
+          <BiSkipPrevious
+            class="icon"
             color="white"
             onClick={() => previous()}
-          ></box-icon>
-          <box-icon
-            name={playing ? "pause" : "play"}
-            color="white"
-            onClick={() => play()}
-          ></box-icon>
-          <box-icon
+          ></BiSkipPrevious>
+          {playing.value ? (
+            <BiPause
+              class="icon"
+              color="white"
+              onClick={() => play()}
+            ></BiPause>
+          ) : (
+            <BiPlay class="icon" color="white" onClick={() => play()}></BiPlay>
+          )}
+          <BiSkipNext
+            class="icon"
             name="skip-next"
             color="white"
             onClick={() => skip()}
-          ></box-icon>
-          <box-icon
-            name={loop ? "revision" : "rotate-right"}
-            animation-duration="4s"
-            color="white"
-            class="loop"
-            onClick={() => setLoop(!loop)}
-          ></box-icon>
+          ></BiSkipNext>
+          {loop.value ? (
+            <BiRevision
+              color="white"
+              class="icon loop"
+              onClick={() => loop.value = !loop}
+            ></BiRevision>
+          ) : (
+            <BiRotateRight
+              color="white"
+              class="icon loop"
+              onClick={() => loop.value = !loop}
+            ></BiRotateRight>
+          )}
 
-          <box-icon
-            name="volume-full"
+          <BiVolumeFull
             color="white"
             type="solid"
-            class="volume"
-          ></box-icon>
+            class="icon volume"
+          ></BiVolumeFull>
           <input
             type="range"
             min="0"
@@ -229,8 +275,8 @@ function VideoPlayer({
         <input
           type="range"
           min="0"
-          max={duration}
-          value={currentTime}
+          max={duration.value}
+          value={currentTime.value}
           onChange={(e) => seekTo(e)}
           id="progress"
         ></input>
