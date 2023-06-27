@@ -128,6 +128,7 @@ function VideoPlayer({
       };
       wait();
     } else {
+      playing.value = true;
       videoPlaying.value = true;
       audio.value.play();
     }
@@ -135,6 +136,7 @@ function VideoPlayer({
 
   function pause() {
     console.log("pause()");
+    playing.value = false;
     videoPlaying.value = false;
     audio.value.pause();
   }
@@ -207,6 +209,8 @@ function VideoPlayer({
         onTimeUpdate={(e) => onProgress(e)}
         preload="auto"
         onEnded={() => videoEnd()}
+        onPause={() => pause()}
+        onPlay={() => resume()}
         //controls
       />
       <div className="player">
