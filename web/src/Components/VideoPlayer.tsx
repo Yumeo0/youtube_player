@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "preact/hooks";
-import { signal } from "@preact/signals";
+import { signal, computed } from "@preact/signals";
 import ReactPlayer from "react-player";
 import {
   BiSkipPrevious,
@@ -27,7 +27,9 @@ const audioUrls = signal([] as types.Format[]);
 const playing = signal(false);
 const isTabFocused = signal(true);
 const duration = signal(0);
+const durationHMS = computed(() => convertSecondsToHMS(duration.value));
 const currentTime = signal(0);
+const currentTimeHMS = computed(() => convertSecondsToHMS(currentTime.value));
 const loop = signal(false);
 
 // Video element state
@@ -88,12 +90,12 @@ function VideoPlayer({
             title: video.videoDetails.title,
             artist: video.videoDetails.author.name,
             album: video.videoDetails.title,
-            artwork: video.videoDetails.thumbnails.map(thumbnail => {
+            artwork: video.videoDetails.thumbnails.map((thumbnail) => {
               let img: MediaImage = {
                 src: thumbnail.url,
                 sizes: `${thumbnail.width}x${thumbnail.height}`,
                 type: "image/png",
-              }
+              };
               return img;
             }),
           });
@@ -101,29 +103,28 @@ function VideoPlayer({
   }, [video]);
 
   useEffect(() => {
-    navigator.mediaSession.setActionHandler('play', function() {
+    navigator.mediaSession.setActionHandler("play", function () {
       play();
     });
-    navigator.mediaSession.setActionHandler('pause', function() {
+    navigator.mediaSession.setActionHandler("pause", function () {
       play();
     });
-    navigator.mediaSession.setActionHandler('previoustrack', function() {
+    navigator.mediaSession.setActionHandler("previoustrack", function () {
       previous();
     });
-    navigator.mediaSession.setActionHandler('nexttrack', function() {
+    navigator.mediaSession.setActionHandler("nexttrack", function () {
       skip();
     });
-    navigator.mediaSession.setActionHandler('seekto', function(e) {
-      if(e.seekTime)
-      audio.value.currentTime = e.seekTime;
+    navigator.mediaSession.setActionHandler("seekto", function (e) {
+      if (e.seekTime) audio.value.currentTime = e.seekTime;
     });
-    navigator.mediaSession.setActionHandler('seekforward', function(e) {
-      if(e.seekOffset)
-      audio.value.currentTime = audio.value.currentTime + e.seekOffset;
+    navigator.mediaSession.setActionHandler("seekforward", function (e) {
+      if (e.seekOffset)
+        audio.value.currentTime = audio.value.currentTime + e.seekOffset;
     });
-    navigator.mediaSession.setActionHandler('seekbackward', function(e) {
-      if(e.seekOffset)
-      audio.value.currentTime = audio.value.currentTime - e.seekOffset;
+    navigator.mediaSession.setActionHandler("seekbackward", function (e) {
+      if (e.seekOffset)
+        audio.value.currentTime = audio.value.currentTime - e.seekOffset;
     });
     const audioElement = document.getElementById("audio") as HTMLAudioElement;
     if (audioElement == null) return;
@@ -207,7 +208,7 @@ function VideoPlayer({
     navigator.mediaSession.setPositionState({
       duration: duration.value,
       playbackRate: 1,
-      position: time
+      position: time,
     });
 
     if (
@@ -273,52 +274,75 @@ function VideoPlayer({
         </div>
         <div className="backdrop"></div>
         <div className="VideoControls">
-          <BiSkipPrevious
-            class="icon"
-            color="white"
-            onClick={() => previous()}
-          ></BiSkipPrevious>
-          {playing.value ? (
-            <BiPause
+          <div className="alignLeft">
+            <BiSkipPrevious
               class="icon"
               color="white"
-              onClick={() => play()}
-            ></BiPause>
-          ) : (
-            <BiPlay class="icon" color="white" onClick={() => play()}></BiPlay>
-          )}
-          <BiSkipNext
-            class="icon"
-            name="skip-next"
-            color="white"
-            onClick={() => skip()}
-          ></BiSkipNext>
-          {loop.value ? (
-            <BiRevision
+              onClick={() => previous()}
+            ></BiSkipPrevious>
+            {playing.value ? (
+              <BiPause
+                class="icon"
+                color="white"
+                onClick={() => play()}
+              ></BiPause>
+            ) : (
+              <BiPlay
+                class="icon"
+                color="white"
+                onClick={() => play()}
+              ></BiPlay>
+            )}
+            <BiSkipNext
+              class="icon"
+              name="skip-next"
               color="white"
-              class="icon loop"
-              onClick={() => (loop.value = !loop)}
-            ></BiRevision>
-          ) : (
-            <BiRotateRight
-              color="white"
-              class="icon loop"
-              onClick={() => (loop.value = !loop)}
-            ></BiRotateRight>
-          )}
+              onClick={() => skip()}
+            ></BiSkipNext>
+            <p>
+              {currentTimeHMS.value.hours != 0
+                ? `${formatNumber(currentTimeHMS.value.hours)}:${formatNumber(
+                    currentTimeHMS.value.minutes
+                  )}:${formatNumber(
+                    currentTimeHMS.value.seconds
+                  )} / ${formatNumber(durationHMS.value.hours)}:${formatNumber(
+                    durationHMS.value.minutes
+                  )}:${formatNumber(durationHMS.value.seconds)}`
+                : `${formatNumber(currentTimeHMS.value.minutes)}:${formatNumber(
+                    currentTimeHMS.value.seconds
+                  )} / ${formatNumber(
+                    durationHMS.value.minutes
+                  )}:${formatNumber(durationHMS.value.seconds)}`}
+            </p>
+          </div>
+          <div className="alignRight">
+            {loop.value ? (
+              <BiRevision
+                color="white"
+                class="icon loop"
+                onClick={() => (loop.value = !loop)}
+              ></BiRevision>
+            ) : (
+              <BiRotateRight
+                color="white"
+                class="icon loop"
+                onClick={() => (loop.value = !loop)}
+              ></BiRotateRight>
+            )}
 
-          <BiVolumeFull
-            color="white"
-            type="solid"
-            class="icon volume"
-          ></BiVolumeFull>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            id="volume"
-            onChange={(e) => changeVolume(e)}
-          ></input>
+            <BiVolumeFull
+              color="white"
+              type="solid"
+              class="icon volume"
+            ></BiVolumeFull>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              id="volume"
+              onChange={(e) => changeVolume(e)}
+            ></input>
+          </div>
         </div>
         <input
           type="range"
@@ -334,3 +358,20 @@ function VideoPlayer({
 }
 
 export default VideoPlayer;
+
+function convertSecondsToHMS(seconds: number): types.HMS {
+  var hours = Math.floor(seconds / 3600);
+  var minutes = Math.floor((seconds % 3600) / 60);
+  var remainingSeconds = seconds % 60;
+
+  let HMS: types.HMS = {
+    hours: hours,
+    minutes: minutes,
+    seconds: remainingSeconds,
+  };
+  return HMS;
+}
+
+function formatNumber(number: number): string {
+  return number.toFixed(0).padStart(2, "0");
+}

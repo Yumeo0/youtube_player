@@ -34,12 +34,10 @@
 .VideoPlayer .icon.volume {
   height: 1.25rem;
   width: 1.25rem;
-  margin-left: 1.5rem;
   margin-right: 0.2rem;
 }
 
 .VideoPlayer .icon.loop {
-  margin-left: 1.5rem;
   height: 1.25rem;
   width: 1.25rem;
 }
@@ -48,7 +46,15 @@
   height: 20px;
   width: 6rem;
   margin: 0px;
-  justify-self: flex-end;
+  display: none;
+}
+
+input[type="range"]:hover {
+  display: block;
+}
+
+.VideoPlayer .icon.volume:hover + input[type="range"] {
+  display: block;
 }
 
 .VideoPlayer #progress {
@@ -62,18 +68,39 @@
 .VideoPlayer .backdrop {
   display: none;
   position: absolute;
-  background: rgb(0,0,0);
-  background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,212,255,0) 100%);
-  bottom: 0.10rem;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 212, 255, 0) 100%
+  );
+  bottom: 0.1rem;
   width: 100%;
   height: 4rem;
 }
- 
+
 .VideoPlayer:hover .VideoControls {
   display: flex;
+  justify-content: space-between;
 }
 
-.VideoPlayer:hover #progress, 
+.VideoPlayer:hover #progress,
 .VideoPlayer:hover .backdrop {
-  display: block
+  display: block;
+}
+
+.VideoPlayer .alignRight {
+  display: flex;
+  align-items: center;
+  justify-self: flex-end;
+  margin-right: 1.5rem;
+}
+
+.VideoPlayer .alignLeft {
+  display: flex;
+
+}
+
+.VideoPlayer .alignLeft p {
+  color: white;
 }

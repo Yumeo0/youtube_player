@@ -1,3 +1,9 @@
+export type HMS = {
+  hours: number,
+  minutes: number,
+  seconds: number
+}
+
 export type RawVideo = {
   formats: Format[],
   videoDetails: VideoDetails
