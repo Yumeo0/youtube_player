@@ -299,6 +299,20 @@ function VideoPlayer({
               color="white"
               onClick={() => skip()}
             ></BiSkipNext>
+            <div className="volumeGroup">
+              <BiVolumeFull
+                color="white"
+                type="solid"
+                class="icon volume"
+              ></BiVolumeFull>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                id="volume"
+                onChange={(e) => changeVolume(e)}
+              ></input>
+            </div>
             <p>
               {currentTimeHMS.value.hours != 0
                 ? `${formatNumber(currentTimeHMS.value.hours)}:${formatNumber(
@@ -329,19 +343,6 @@ function VideoPlayer({
                 onClick={() => (loop.value = !loop)}
               ></BiRotateRight>
             )}
-
-            <BiVolumeFull
-              color="white"
-              type="solid"
-              class="icon volume"
-            ></BiVolumeFull>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              id="volume"
-              onChange={(e) => changeVolume(e)}
-            ></input>
           </div>
         </div>
         <input
