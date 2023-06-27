@@ -12,6 +12,7 @@ export type Format = {
 export type VideoDetails = {
   author: Author,
   bestThumbnail: Thumbnail | undefined,
+  lengthSeconds: number,
   durationSec: number,
   thumbnails: Thumbnail[], 
   title: string,

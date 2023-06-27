@@ -54,4 +54,7 @@ const router = createBrowserRouter(
   )
 );
 
-render(<RouterProvider router={router}/>, document.getElementById("app") as HTMLElement);
+render(
+  <RouterProvider router={router} />,
+  document.getElementById("app") as HTMLElement
+);

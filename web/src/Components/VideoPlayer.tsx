@@ -15,7 +15,7 @@ import * as types from "../types";
 import "./VideoPlayer.css";
 import { TargetedEvent } from "preact/compat";
 
-const audio = signal(undefined as unknown as HTMLAudioElement)
+const audio = signal(undefined as unknown as HTMLAudioElement);
 
 // Urls and selected Quality
 const videoQuality = signal(0);
@@ -55,7 +55,7 @@ function VideoPlayer({
       })
         .then((response) => response.json())
         .then((json) => {
-          let video = json.video;
+          let video: types.RawVideo = json.video;
           let formats = video.formats;
 
           if (formats.length < 1) {
@@ -83,10 +83,48 @@ function VideoPlayer({
           );
           audioUrls.value = audioFormats;
           duration.value = video.videoDetails.lengthSeconds;
+
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: video.videoDetails.title,
+            artist: video.videoDetails.author.name,
+            album: video.videoDetails.title,
+            artwork: video.videoDetails.thumbnails.map(thumbnail => {
+              let img: MediaImage = {
+                src: thumbnail.url,
+                sizes: `${thumbnail.width}x${thumbnail.height}`,
+                type: "image/png",
+              }
+              return img;
+            }),
+          });
         });
   }, [video]);
 
   useEffect(() => {
+    navigator.mediaSession.setActionHandler('play', function() {
+      play();
+    });
+    navigator.mediaSession.setActionHandler('pause', function() {
+      play();
+    });
+    navigator.mediaSession.setActionHandler('previoustrack', function() {
+      previous();
+    });
+    navigator.mediaSession.setActionHandler('nexttrack', function() {
+      skip();
+    });
+    navigator.mediaSession.setActionHandler('seekto', function(e) {
+      if(e.seekTime)
+      audio.value.currentTime = e.seekTime;
+    });
+    navigator.mediaSession.setActionHandler('seekforward', function(e) {
+      if(e.seekOffset)
+      audio.value.currentTime = audio.value.currentTime + e.seekOffset;
+    });
+    navigator.mediaSession.setActionHandler('seekbackward', function(e) {
+      if(e.seekOffset)
+      audio.value.currentTime = audio.value.currentTime - e.seekOffset;
+    });
     const audioElement = document.getElementById("audio") as HTMLAudioElement;
     if (audioElement == null) return;
     audio.value = audioElement;
@@ -128,17 +166,17 @@ function VideoPlayer({
       };
       wait();
     } else {
-      playing.value = true;
       videoPlaying.value = true;
       audio.value.play();
+      navigator.mediaSession.playbackState = "playing";
     }
   }
 
   function pause() {
     console.log("pause()");
-    playing.value = false;
     videoPlaying.value = false;
     audio.value.pause();
+    navigator.mediaSession.playbackState = "paused";
   }
 
   function play() {
@@ -150,8 +188,8 @@ function VideoPlayer({
 
   function skip() {
     console.log("skip()");
-    pause();
     onSkipVideo();
+    pause();
   }
 
   function previous() {
@@ -165,6 +203,12 @@ function VideoPlayer({
     const player = e.target as HTMLAudioElement;
     const time = player.currentTime;
     currentTime.value = time;
+
+    navigator.mediaSession.setPositionState({
+      duration: duration.value,
+      playbackRate: 1,
+      position: time
+    });
 
     if (
       !isTabFocused.value ||
@@ -209,8 +253,8 @@ function VideoPlayer({
         onTimeUpdate={(e) => onProgress(e)}
         preload="auto"
         onEnded={() => videoEnd()}
-        onPause={() => pause()}
-        onPlay={() => resume()}
+        //onPause={(e) => pause()}
+        //onPlay={() => resume()}
         //controls
       />
       <div className="player">
@@ -253,13 +297,13 @@ function VideoPlayer({
             <BiRevision
               color="white"
               class="icon loop"
-              onClick={() => loop.value = !loop}
+              onClick={() => (loop.value = !loop)}
             ></BiRevision>
           ) : (
             <BiRotateRight
               color="white"
               class="icon loop"
-              onClick={() => loop.value = !loop}
+              onClick={() => (loop.value = !loop)}
             ></BiRotateRight>
           )}
 

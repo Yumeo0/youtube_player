@@ -23,7 +23,6 @@ function App() {
     if (playingVideo == null) return;
     const queue = document.getElementsByClassName("Videos")[0];
     queue.scrollTop = playingVideo.offsetTop;
-    console.log(playingVideo.offsetTop, queue.scrollTop);
   }, [currentVideo]);
 
   const onQueueChange = (queue: types.Queue) => {
