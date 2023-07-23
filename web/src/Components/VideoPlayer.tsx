@@ -24,7 +24,7 @@ const videoUrls = signal([] as types.Format[]);
 const audioUrls = signal([] as types.Format[]);
 
 // Player state
-const bufferTime = 500;
+const bufferTime = 650;
 const playing = signal(false);
 const isTabFocused = signal(true);
 const duration = signal(0);
@@ -155,7 +155,7 @@ function VideoPlayer({
     setTimeout(() => {
       videoReady.value = true;
       if (playing.value) resume();
-    }, bufferTime / 2);
+    }, bufferTime);
   }
 
   function resume() {
@@ -222,7 +222,8 @@ function VideoPlayer({
       videoRef.current.getCurrentTime() < time - 0.25 ||
       videoRef.current.getCurrentTime() > time + 0.25
     ) {
-      pause();
+      console.log(videoRef.current.getCurrentTime(), time)
+      pause(); 
       videoRef.current.seekTo(time);
     }
   }
@@ -243,6 +244,7 @@ function VideoPlayer({
     if (loop.value) {
       audio.value.currentTime = 0;
     } else {
+      videoRef.current.seekTo(0);
       onVideoEnd();
     }
   }
