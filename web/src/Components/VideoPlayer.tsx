@@ -155,7 +155,7 @@ function VideoPlayer({
     setTimeout(() => {
       videoReady.value = true;
       if (playing.value) resume();
-    }, bufferTime);
+    }, bufferTime / 2);
   }
 
   function resume() {
@@ -269,6 +269,7 @@ function VideoPlayer({
             //onEnded={() => videoEnd()}
             width={"100%"}
             height={"100%"}
+            className='react-player'
             ref={videoRef}
             muted
           />
