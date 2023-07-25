@@ -1,3 +1,3 @@
 git pull
-start powershell -noexit -Command "cd server; yarn; yarn dev"
-start powershell -noexit -Command "cd web; yarn; yarn dev"
+start powershell -executionpolicy bypass -noexit -Command "cd server; yarn; yarn dev"
+start powershell -executionpolicy bypass -noexit -Command "cd web; yarn; yarn dev"
