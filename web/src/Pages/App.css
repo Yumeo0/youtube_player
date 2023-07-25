@@ -3,10 +3,10 @@
   height: calc(100% - 4rem);
   display: flex;
   flex-direction: row;
-  align-items:start;
+  align-items: start;
 }
 
-.h-100{
+.h-100 {
   height: 100%;
 }
 
@@ -16,9 +16,9 @@ input {
   border-radius: 8px;
   width: 90%;
   height: 2.5rem;
-  margin-bottom: .25rem;
-  margin-left: .2rem;
-  margin-right: .2rem;
+  margin-bottom: 0.25rem;
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
   font-size: 1rem;
 }
 
@@ -26,27 +26,27 @@ button {
   background-color: #555555;
   border: none;
   color: white;
-  padding: .75rem 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 0.75rem;
-  margin-top: .5rem;
-  margin-left: .2rem;
-  margin-right: .2rem;
+  margin-top: 0.5rem;
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
 }
 
 label {
-  display:block;
+  display: block;
 }
 
 button.long {
-  width:16rem;
+  width: 16rem;
 }
 
 button.medium {
-  width:8rem;
+  width: 8rem;
 }
 
 div.center {
@@ -55,7 +55,7 @@ div.center {
   align-items: center;
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   :root {
     font-size: 1.25rem;
   }

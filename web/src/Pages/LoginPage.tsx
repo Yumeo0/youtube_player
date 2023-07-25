@@ -1,62 +1,66 @@
-import { Link } from "react-router-dom";
-import { useState } from "preact/hooks";
+import { useState } from 'preact/hooks';
+import { Link } from 'react-router-dom';
+import { SignUpResponse } from '../types';
 
 function LoginPage() {
-  const [user, setUser] = useState("");
-  const [pass, setPass] = useState("");
+  const [user, setUser] = useState('');
+  const [pass, setPass] = useState('');
 
-  async function login() {
-    fetch("http://localhost:3001/login", {
+  function login() {
+    fetch('http://localhost:3001/login', {
       headers: {
         username: user,
         password: pass,
       },
     })
       .then((respone) => respone.json())
-      .then((json) => {
-        if (json.status == 200) window.location.href = "/";
-      });
+      .then((json: SignUpResponse) => {
+        if (json.status == 200) window.location.href = '/';
+      })
+      .catch((e) => console.log(e));
   }
 
   return (
-    <div className="center">
+    <div className={'center'}>
       <div>
-        <label>Username</label>
+        <label htmlFor={'username'}>Username</label>
         <input
-          type="text"
-          placeholder="username"
+          id={'username'}
+          type={'text'}
+          placeholder={'username'}
           onInput={(e) => {
-            if(e.target == null) return;
+            if (e.target == null) return;
             const input: HTMLInputElement = e.target as HTMLInputElement;
-            setUser(input.value)
+            setUser(input.value);
           }}
         />
       </div>
       <div>
-        <label>Password</label>
+        <label htmlFor={'password'}>Password</label>
         <input
-          type="password"
-          placeholder="password"
+          id={'password'}
+          type={'password'}
+          placeholder={'password'}
           onInput={(e) => {
-            if(e.target == null) return;
+            if (e.target == null) return;
             const input: HTMLInputElement = e.target as HTMLInputElement;
-            setPass(input.value)
+            setPass(input.value);
           }}
         />
       </div>
       <div>
-        <button className="medium" onClick={() => login()}>
+        <button className={'medium'} onClick={() => login()}>
           Login
         </button>
       </div>
       <div>
-        <Link to="/signup">
-          <button className="medium">Sign Up</button>
+        <Link to={'/signup'}>
+          <button className={'medium'}>Sign Up</button>
         </Link>
       </div>
       <div>
-        <Link to="/">
-          <button className="long">Login as guest</button>
+        <Link to={'/'}>
+          <button className={'long'}>Login as guest</button>
         </Link>
       </div>
     </div>

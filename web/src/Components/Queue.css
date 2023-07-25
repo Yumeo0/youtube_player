@@ -27,7 +27,7 @@
 .Video.Playing {
   background-color: #555555;
 }
-.Video.Playing p, 
+.Video.Playing p,
 .Video.Playing a {
   color: white;
 }
@@ -39,7 +39,7 @@
   text-overflow: ellipsis;
   text-align: left;
   width: 13rem;
-  color: var(--txtColor)
+  color: var(--txtColor);
 }
 
 .Video a {
@@ -65,7 +65,7 @@
   margin-right: 0.5rem;
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .queue {
     width: 100%;
   }
