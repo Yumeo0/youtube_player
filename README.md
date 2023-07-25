@@ -6,17 +6,16 @@ Enter Youtube Video and Playlist Urls and save a watch history by creating an ac
 
 ## Prerequisites
 
-*   [Git](https://www.git-scm.com/downloads)
-
 *   [NodeJS](https://nodejs.org/en/download)
 
 ## Execute
 
 Open a command line (Press `windows + r` then type `cmd` and press `enter`).
 
-Install the yarn package manager:
+Install git and the yarn package manager:
 
 ```bash
+choco install git -y
 npm install -g yarn
 ```
 
