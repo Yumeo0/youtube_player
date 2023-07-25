@@ -215,15 +215,14 @@ function VideoPlayer({
     if (
       !isTabFocused.value ||
       videoRef.current == null ||
-      videoRef.current.getCurrentTime() == null
+      videoRef.current.getCurrentTime() == null || 
+      time < 3
     )
       return;
     if (
       videoRef.current.getCurrentTime() < time - 0.25 ||
       videoRef.current.getCurrentTime() > time + 0.25
     ) {
-      console.log(videoRef.current.getCurrentTime(), time)
-      pause(); 
       videoRef.current.seekTo(time);
     }
   }
@@ -236,6 +235,7 @@ function VideoPlayer({
 
   function seekTo(e: TargetedEvent) {
     if (e.target == null) return;
+    pause(); 
     const input = e.target as HTMLInputElement;
     audio.value.currentTime = parseFloat(input.value);
   }
