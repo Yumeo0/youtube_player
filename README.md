@@ -10,7 +10,7 @@ Enter Youtube Video and Playlist Urls and save a watch history by creating an ac
 
 ## Execute
 
-Open a command line (Press `windows + r` then type `cmd` and press `enter`).
+Open a command line as administrator.
 
 Install git and the yarn package manager:
 
