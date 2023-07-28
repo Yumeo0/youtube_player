@@ -6,11 +6,11 @@
 
 .VideoPlayer .player {
   width: 90%;
-  aspect-ratio: 16/9;
   display: flex;
   position: relative;
 }
 .VideoPlayer .react-player {
+  max-width: 100%;
   aspect-ratio: 16/9;
 }
 
