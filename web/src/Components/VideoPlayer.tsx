@@ -2,6 +2,7 @@ import { signal, computed } from '@preact/signals';
 import { TargetedEvent } from 'preact/compat';
 import { useEffect } from 'preact/hooks';
 import { BiSkipPrevious, BiSkipNext, BiPause, BiPlay, BiVolumeFull, BiRevision, BiRotateRight } from 'react-icons/bi';
+import { FaSpinner } from 'react-icons/fa6';
 import { HMS, Format, Video, YoutubeResponse, RawVideo } from '../types';
 import './VideoPlayer.css';
 
@@ -229,9 +230,13 @@ function VideoPlayer({
   }
 
   return (
-    <div className='VideoPlayer'>
-      <audio id='audio' onTimeUpdate={(e) => onProgress(e)} preload='auto' onEnded={() => videoEnd()} />
-      <div className='player'>
+    <div className={'VideoPlayer'}>
+      <audio id={'audio'} onTimeUpdate={(e) => onProgress(e)} preload={'auto'} onEnded={() => videoEnd()} />
+      <div className={'player'}>
+        <FaSpinner
+          class={'loader' + (videoRef.value?.paused && playing.value ? ' visible' : '')}
+          color={'white'}
+        ></FaSpinner>
         <video
           onClick={() => play()}
           onCanPlayThrough={onVideoReady}
@@ -241,35 +246,25 @@ function VideoPlayer({
           preload={'auto'}
           muted
         />
-        <div className='backdrop'></div>
-        <div className='VideoControls'>
-          <div className='alignLeft'>
-            <BiSkipPrevious class='icon' color='white' onClick={() => previous()}></BiSkipPrevious>
+        <div className={'backdrop'}></div>
+        <div className={'VideoControls'}>
+          <div className={'alignLeft'}>
+            <BiSkipPrevious class={'icon'} color={'white'} onClick={() => previous()}></BiSkipPrevious>
             {playing.value ? (
-              <BiPause class='icon' color='white' onClick={() => play()}></BiPause>
+              <BiPause class={'icon'} color={'white'} onClick={() => play()}></BiPause>
             ) : (
-              <BiPlay class='icon' color='white' onClick={() => play()}></BiPlay>
+              <BiPlay class={'icon'} color={'white'} onClick={() => play()}></BiPlay>
             )}
-            <BiSkipNext class='icon' name='skip-next' color='white' onClick={() => skip()}></BiSkipNext>
-            <div className='volumeGroup'>
-              <BiVolumeFull color='white' type='solid' class='icon volume'></BiVolumeFull>
-              <input type='range' min='0' max='100' id='volume' onChange={(e) => changeVolume(e)}></input>
+            <BiSkipNext class={'icon'} name={'skip-next'} color={'white'} onClick={() => skip()}></BiSkipNext>
+            <div className={'volumeGroup'}>
+              <BiVolumeFull color={'white'} type={'solid'} class={'icon volume'}></BiVolumeFull>
+              <input type={'range'} min={'0'} max={'100'} id={'volume'} onChange={(e) => changeVolume(e)}></input>
             </div>
-            <p>
-              {currentTimeHMS.value.hours != 0
-                ? `${formatNumber(currentTimeHMS.value.hours)}:${formatNumber(
-                    currentTimeHMS.value.minutes,
-                  )}:${formatNumber(currentTimeHMS.value.seconds)} / ${formatNumber(
-                    durationHMS.value.hours,
-                  )}:${formatNumber(durationHMS.value.minutes)}:${formatNumber(durationHMS.value.seconds)}`
-                : `${formatNumber(currentTimeHMS.value.minutes)}:${formatNumber(
-                    currentTimeHMS.value.seconds,
-                  )} / ${formatNumber(durationHMS.value.minutes)}:${formatNumber(durationHMS.value.seconds)}`}
-            </p>
+            <p>{formatTime(currentTimeHMS.value) + ' / ' + formatTime(durationHMS.value)}</p>
           </div>
-          <div className='alignRight'>
+          <div className={'alignRight'}>
             {loop.value ? (
-              <BiRevision color='white' class='icon loop' onClick={() => (loop.value = !loop.value)}></BiRevision>
+              <BiRevision color={'white'} class='icon loop' onClick={() => (loop.value = !loop.value)}></BiRevision>
             ) : (
               <BiRotateRight color='white' class='icon loop' onClick={() => (loop.value = !loop.value)}></BiRotateRight>
             )}
@@ -301,6 +296,14 @@ function convertSecondsToHMS(seconds: number): HMS {
     seconds: remainingSeconds,
   };
   return HMS;
+}
+
+function formatTime(hms: HMS) {
+  return currentTimeHMS.value.hours != 0
+    ? `${formatNumber(hms.hours)}:${formatNumber(hms.minutes)}:${formatNumber(hms.seconds)} / ${formatNumber(
+        hms.hours,
+      )}:${formatNumber(hms.minutes)}:${formatNumber(hms.seconds)}`
+    : `${formatNumber(hms.minutes)}:${formatNumber(hms.seconds)}`;
 }
 
 function formatNumber(number: number): string {
