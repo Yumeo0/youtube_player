@@ -55,6 +55,10 @@ div.center {
   align-items: center;
 }
 
+.main {
+  width: 70%;
+}
+
 @media (max-width: 1024px) {
   :root {
     font-size: 1.25rem;

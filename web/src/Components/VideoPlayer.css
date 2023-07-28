@@ -1,15 +1,15 @@
 .VideoPlayer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .VideoPlayer .player {
-  width: 90%;
+  width: 100%;
   display: flex;
   position: relative;
 }
-.VideoPlayer .react-player {
+.VideoPlayer .video-player {
   max-width: 100%;
   aspect-ratio: 16/9;
 }

@@ -1,12 +1,15 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/media-has-caption */
 import { signal, computed } from '@preact/signals';
 import { TargetedEvent } from 'preact/compat';
-import { useEffect, useRef } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { BiSkipPrevious, BiSkipNext, BiPause, BiPlay, BiVolumeFull, BiRevision, BiRotateRight } from 'react-icons/bi';
-import ReactPlayer from 'react-player';
 import { HMS, Format, Video, YoutubeResponse, RawVideo } from '../types';
 import './VideoPlayer.css';
 
 const audio = signal(undefined as unknown as HTMLAudioElement);
+const videoRef = signal(undefined as unknown as HTMLVideoElement);
 
 // Urls and selected Quality
 const videoQuality = signal(0);
@@ -15,7 +18,8 @@ const videoUrls = signal([] as Format[]);
 const audioUrls = signal([] as Format[]);
 
 // Player state
-const bufferTime = 550;
+const bufferTime = 650;
+const defaultVolume = 4;
 const playing = signal(false);
 const isTabFocused = signal(true);
 const duration = signal(0);
@@ -25,7 +29,6 @@ const currentTimeHMS = computed(() => convertSecondsToHMS(currentTime.value));
 const loop = signal(false);
 
 // Video element state
-const videoPlaying = signal(false);
 const videoReady = signal(false);
 
 function VideoPlayer({
@@ -39,9 +42,6 @@ function VideoPlayer({
   onSkipVideo: () => void;
   onPreviousVideo: () => void;
 }) {
-  // Video element state
-  const videoRef = useRef(null as unknown as ReactPlayer);
-
   useEffect(() => {
     if (video?.url)
       fetch(`http://localhost:3001/youtube`, {
@@ -118,10 +118,12 @@ function VideoPlayer({
     const audioElement = document.getElementById('audio') as HTMLAudioElement;
     if (audioElement == null) return;
     audio.value = audioElement;
-    audio.value.volume = 0.05;
+    audio.value.volume = defaultVolume / 100;
     const volumeSlider: HTMLInputElement = document.getElementById('volume') as HTMLInputElement;
     if (volumeSlider == null) return;
-    volumeSlider.value = '5';
+    volumeSlider.value = `${defaultVolume}`;
+
+    videoRef.value = document.getElementById('video') as HTMLVideoElement;
 
     document.addEventListener('visibilitychange', function () {
       isTabFocused.value = !document.hidden;
@@ -130,14 +132,6 @@ function VideoPlayer({
 
   function onVideoReady() {
     console.log('onVideoReady()');
-    setTimeout(() => {
-      videoReady.value = true;
-      if (playing.value) resume();
-    }, bufferTime);
-  }
-
-  function onBufferEnd() {
-    console.log('onBufferEnd()');
     setTimeout(() => {
       videoReady.value = true;
       if (playing.value) resume();
@@ -154,7 +148,7 @@ function VideoPlayer({
       };
       wait();
     } else {
-      videoPlaying.value = true;
+      videoRef.value.play().catch((e) => console.log(e));
       audio.value.play().catch((e) => console.log(e));
       navigator.mediaSession.playbackState = 'playing';
     }
@@ -162,7 +156,7 @@ function VideoPlayer({
 
   function pause() {
     console.log('pause()');
-    videoPlaying.value = false;
+    videoRef.value.pause();
     audio.value.pause();
     navigator.mediaSession.playbackState = 'paused';
   }
@@ -198,10 +192,9 @@ function VideoPlayer({
       position: time,
     });
 
-    if (!isTabFocused.value || videoRef.current == null || videoRef.current.getCurrentTime() == null || time < 3)
-      return;
-    if (videoRef.current.getCurrentTime() < time - 0.25 || videoRef.current.getCurrentTime() > time + 0.25) {
-      videoRef.current.seekTo(time);
+    if (!isTabFocused.value || time < 3) return;
+    if (videoRef.value.currentTime < time - 0.25 || videoRef.value.currentTime > time + 0.25) {
+      videoRef.value.currentTime = time;
     }
   }
 
@@ -222,9 +215,12 @@ function VideoPlayer({
     if (loop.value) {
       audio.value.currentTime = 0;
     } else {
-      videoRef.current.seekTo(0);
       onVideoEnd();
     }
+  }
+
+  function onBuffer() {
+    pause();
   }
 
   return (
@@ -235,25 +231,18 @@ function VideoPlayer({
         onTimeUpdate={(e) => onProgress(e)}
         preload='auto'
         onEnded={() => videoEnd()}
-        //onPause={(e) => pause()}
-        //onPlay={() => resume()}
-        //controls
       />
       <div className='player'>
-        <div onClick={() => play()}>
-          <ReactPlayer
-            url={videoUrls.value[videoUrls.value.length - 1]?.url}
-            playing={videoPlaying.value}
-            onReady={() => onVideoReady()}
-            onBufferEnd={() => onBufferEnd()}
-            //onEnded={() => videoEnd()}
-            width={'100%'}
-            height={'100%'}
-            className='react-player'
-            ref={videoRef}
-            muted
-          />
-        </div>
+        <video
+          onClick={() => play()}
+          src={videoUrls.value[videoUrls.value.length - 1]?.url}
+          onCanPlayThrough={onVideoReady}
+          onWaiting={onBuffer}
+          className={'video-player'}
+          id={'video'}
+          preload={'auto'}
+          muted
+        />
         <div className='backdrop'></div>
         <div className='VideoControls'>
           <div className='alignLeft'>

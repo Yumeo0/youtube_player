@@ -49,7 +49,7 @@ function App() {
 
   return (
     <div className='App'>
-      <div className='h-100'>
+      <div className='h-100 main'>
         <VideoPlayer
           video={queue[currentVideo]}
           onVideoEnd={nextVideo}
@@ -58,7 +58,6 @@ function App() {
         />
         <input
           type='text'
-          className='main'
           placeholder='Youtube video/playlist id/link'
           onKeyPress={(e) => {
             if (e.target == null) return;
