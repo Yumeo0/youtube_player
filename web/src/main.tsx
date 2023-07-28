@@ -8,7 +8,7 @@ import LoginPage from './Pages/LoginPage';
 import SignUp from './Pages/SignUp';
 
 function Logic() {
-  const [mode, setMode] = useState(true);
+  const [mode, setMode] = useState(false);
 
   useEffect(() => {
     const root = document.querySelector(':root') as HTMLElement;
