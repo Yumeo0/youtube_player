@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/media-has-caption */
 import { signal, computed } from '@preact/signals';
 import { TargetedEvent } from 'preact/compat';
 import { useEffect } from 'preact/hooks';
@@ -43,6 +40,7 @@ function VideoPlayer({
   onPreviousVideo: () => void;
 }) {
   useEffect(() => {
+    console.log('new video request');
     if (video?.url)
       fetch(`http://localhost:3001/youtube`, {
         headers: { url: video.url },
@@ -50,6 +48,7 @@ function VideoPlayer({
         .then((response) => response.json())
         .then((json: YoutubeResponse) => {
           if (json.video == undefined) return;
+          console.log('new video loaded');
 
           const video: RawVideo = json.video;
           const formats = video.formats;
@@ -89,6 +88,11 @@ function VideoPlayer({
               return img;
             }),
           });
+
+          audio.value.src = audioUrls.value[audioUrls.value.length - 1]?.url;
+          videoRef.value.src = videoUrls.value[videoUrls.value.length - 1]?.url;
+          audio.value.load();
+          videoRef.value.load();
         })
         .catch((e) => console.log(e));
   }, [video]);
@@ -214,28 +218,22 @@ function VideoPlayer({
   function videoEnd() {
     if (loop.value) {
       audio.value.currentTime = 0;
+      resume();
     } else {
       onVideoEnd();
     }
   }
 
   function onBuffer() {
-    pause();
+    //pause();
   }
 
   return (
     <div className='VideoPlayer'>
-      <audio
-        id='audio'
-        src={audioUrls.value[audioUrls.value.length - 1]?.url}
-        onTimeUpdate={(e) => onProgress(e)}
-        preload='auto'
-        onEnded={() => videoEnd()}
-      />
+      <audio id='audio' onTimeUpdate={(e) => onProgress(e)} preload='auto' onEnded={() => videoEnd()} />
       <div className='player'>
         <video
           onClick={() => play()}
-          src={videoUrls.value[videoUrls.value.length - 1]?.url}
           onCanPlayThrough={onVideoReady}
           onWaiting={onBuffer}
           className={'video-player'}
@@ -271,9 +269,9 @@ function VideoPlayer({
           </div>
           <div className='alignRight'>
             {loop.value ? (
-              <BiRevision color='white' class='icon loop' onClick={() => (loop.value = !loop)}></BiRevision>
+              <BiRevision color='white' class='icon loop' onClick={() => (loop.value = !loop.value)}></BiRevision>
             ) : (
-              <BiRotateRight color='white' class='icon loop' onClick={() => (loop.value = !loop)}></BiRotateRight>
+              <BiRotateRight color='white' class='icon loop' onClick={() => (loop.value = !loop.value)}></BiRotateRight>
             )}
           </div>
         </div>
