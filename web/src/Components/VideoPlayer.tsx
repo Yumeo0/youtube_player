@@ -196,8 +196,8 @@ function VideoPlayer({
       playbackRate: 1,
       position: time,
     });
-
-    if (!isTabFocused.value || time < 3) return;
+    // !isTabFocused.value ||
+    if (time < 3) return;
     if (videoRef.value.currentTime < time - 0.25 || videoRef.value.currentTime > time + 0.25) {
       videoRef.value.currentTime = time;
     }
