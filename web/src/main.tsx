@@ -1,34 +1,28 @@
-import { render } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
-import './index.css';
+import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, createRoutesFromElements, Outlet, Route, RouterProvider, Link } from 'react-router-dom';
-import App from './Pages/App';
-import Failed from './Pages/Failed';
-import LoginPage from './Pages/LoginPage';
-import SignUp from './Pages/SignUp';
+import App from './App.tsx';
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from '@/components/ui/navigation-menu';
+import { ThemeProvider } from '@/components/theme-provider';
 
+import './index.css';
+import { ModeToggle } from './components/mode-toggle.tsx';
+
+// eslint-disable-next-line react-refresh/only-export-components
 function Logic() {
-  const [mode, setMode] = useState(false);
-
-  useEffect(() => {
-    const root = document.querySelector(':root') as HTMLElement;
-    if (root == null) return;
-    root.style.setProperty('--bgColor', mode ? 'white' : '#313233');
-    root.style.setProperty('--txtColor', mode ? 'black' : 'white');
-  }, [mode]);
-
   return (
-    <>
-      <nav style={{ alignSelf: 'end' }}>
-        <Link to='/Login'>
-          <button>Login</button>
-        </Link>
-        <button type='button' style={{ marginLeft: '.25rem' }} onClick={() => setMode(!mode)}>
-          Light/Dark
-        </button>
-      </nav>
-      <Outlet context={mode} />
-    </>
+    <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+      <div className='me-auto ms-auto flex w-screen max-w-7xl flex-row justify-between p-4'>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <Link to='/Login'>Login</Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+        <ModeToggle />
+      </div>
+      <Outlet />
+    </ThemeProvider>
   );
 }
 
@@ -36,11 +30,8 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Logic />}>
       <Route path='/' element={<App />} />
-      <Route path='login' element={<LoginPage />} />
-      <Route path='signup' element={<SignUp />} />
-      <Route path='*' element={<Failed />} />
     </Route>,
   ),
 );
 
-render(<RouterProvider router={router} />, document.getElementById('app') as HTMLElement);
+ReactDOM.createRoot(document.getElementById('root')!).render(<RouterProvider router={router} />);

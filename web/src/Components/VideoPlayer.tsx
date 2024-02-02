@@ -1,23 +1,23 @@
-import { signal, computed } from '@preact/signals';
-import { TargetedEvent } from 'preact/compat';
-import { useEffect } from 'preact/hooks';
+import { computed, signal } from '@preact/signals-react';
 import { BiSkipPrevious, BiSkipNext, BiPause, BiPlay, BiVolumeFull, BiRevision, BiRotateRight } from 'react-icons/bi';
 import { FaSpinner } from 'react-icons/fa6';
 import { HMS, Format, Video, YoutubeResponse, RawVideo } from '../types';
+import { ChangeEvent, useEffect } from 'react';
+
 import './VideoPlayer.css';
 
 const audio = signal(undefined as unknown as HTMLAudioElement);
 const videoRef = signal(undefined as unknown as HTMLVideoElement);
 
 // Urls and selected Quality
-const videoQuality = signal(0);
-const audioQuality = signal(0);
+//const videoQuality = signal(0);
+//const audioQuality = signal(0);
 const videoUrls = signal([] as Format[]);
 const audioUrls = signal([] as Format[]);
 
 // Player state
 const bufferTime = 650;
-const defaultVolume = 4;
+const defaultVolume = 5;
 const playing = signal(false);
 const isTabFocused = signal(true);
 const duration = signal(0);
@@ -27,7 +27,7 @@ const currentTimeHMS = computed(() => convertSecondsToHMS(currentTime.value));
 const loop = signal(false);
 
 // Video element state
-const videoReady = signal(false);
+const isVideoReady = signal(false);
 
 function VideoPlayer({
   video,
@@ -138,14 +138,14 @@ function VideoPlayer({
   function onVideoReady() {
     console.log('onVideoReady()');
     setTimeout(() => {
-      videoReady.value = true;
+      isVideoReady.value = true;
       if (playing.value) resume();
     }, bufferTime);
   }
 
   function resume() {
     console.log('resume()');
-    if (!videoReady.value) {
+    if (!isVideoReady.value) {
       const wait = () => {
         setTimeout(() => {
           resume();
@@ -185,7 +185,7 @@ function VideoPlayer({
     onPreviousVideo();
   }
 
-  function onProgress(e: TargetedEvent) {
+  function onProgress(e: React.SyntheticEvent<HTMLAudioElement, Event>) {
     if (e.target == null) return;
     const player = e.target as HTMLAudioElement;
     const time = player.currentTime;
@@ -203,13 +203,13 @@ function VideoPlayer({
     }
   }
 
-  function changeVolume(e: TargetedEvent) {
+  function changeVolume(e: ChangeEvent) {
     if (e.target == null) return;
     const input = e.target as HTMLInputElement;
     audio.value.volume = parseFloat(input.value) / 100;
   }
 
-  function seekTo(e: TargetedEvent) {
+  function seekTo(e: ChangeEvent) {
     if (e.target == null) return;
     pause();
     const input = e.target as HTMLInputElement;
@@ -226,58 +226,85 @@ function VideoPlayer({
   }
 
   function onBuffer() {
+    console.log('Buffering');
     //pause();
   }
 
   return (
-    <div className={'VideoPlayer'}>
-      <audio id={'audio'} onTimeUpdate={(e) => onProgress(e)} preload={'auto'} onEnded={() => videoEnd()} />
-      <div className={'player'}>
+    <div id='VideoPlayer' className='me-auto ms-auto w-full'>
+      <audio id='audio' onTimeUpdate={(e) => onProgress(e)} preload='auto' onEnded={() => videoEnd()} />
+      <div id='player' className='group relative w-full'>
         <FaSpinner
-          class={'loader' + (videoRef.value?.paused && playing.value ? ' visible' : '')}
-          color={'white'}
+          className={isVideoReady.value ? 'hidden' : 'absolute left-1/2 top-1/2 block h-8 w-8 animate-spin'}
+          color='white'
         ></FaSpinner>
         <video
           onClick={() => play()}
           onCanPlayThrough={onVideoReady}
           onWaiting={onBuffer}
-          className={'video-player'}
-          id={'video'}
-          preload={'auto'}
+          className='aspect-video w-full max-w-full rounded-lg'
+          id='video'
+          preload='auto'
           muted
         />
-        <div className={'backdrop'}></div>
-        <div className={'VideoControls'}>
-          <div className={'alignLeft'}>
-            <BiSkipPrevious class={'icon'} color={'white'} onClick={() => previous()}></BiSkipPrevious>
-            {playing.value ? (
-              <BiPause class={'icon'} color={'white'} onClick={() => play()}></BiPause>
-            ) : (
-              <BiPlay class={'icon'} color={'white'} onClick={() => play()}></BiPlay>
-            )}
-            <BiSkipNext class={'icon'} name={'skip-next'} color={'white'} onClick={() => skip()}></BiSkipNext>
-            <div className={'volumeGroup'}>
-              <BiVolumeFull color={'white'} type={'solid'} class={'icon volume'}></BiVolumeFull>
-              <input type={'range'} min={'0'} max={'100'} id={'volume'} onChange={(e) => changeVolume(e)}></input>
+        <div
+          id='VideoControls'
+          className='absolute bottom-0 hidden w-full flex-col items-center pe-2 ps-2 group-hover:flex'
+        >
+          <input
+            type='range'
+            min='0'
+            max={duration.value}
+            value={currentTime.value}
+            onChange={(e) => seekTo(e)}
+            id='progress'
+            className='w-full'
+          ></input>
+          <div className='flex w-full flex-row items-center justify-between'>
+            <div className='flex items-center'>
+              <BiSkipPrevious className='me-1 ms-4 h-6 w-6' color='white' onClick={() => previous()}></BiSkipPrevious>
+              {playing.value ? (
+                <BiPause className='me-1 ms-1 h-6 w-6' color='white' onClick={() => play()}></BiPause>
+              ) : (
+                <BiPlay className='me-1 ms-1 h-6 w-6' color='white' onClick={() => play()}></BiPlay>
+              )}
+              <BiSkipNext
+                className='me-1 ms-1 h-6 w-6'
+                name='skip-next'
+                color='white'
+                onClick={() => skip()}
+              ></BiSkipNext>
+              <div id='VolumeGroup' className='group flex h-12 items-center'>
+                <BiVolumeFull color='white' type='solid' className='me-1 ms-1 h-5 w-5'></BiVolumeFull>
+                <input
+                  className='m-0 mr-1 hidden h-5 w-24 group-hover:block'
+                  type='range'
+                  min='0'
+                  max='10'
+                  step={0.1}
+                  id='volume'
+                  onChange={(e) => changeVolume(e)}
+                ></input>
+              </div>
+              <p>{formatTime(currentTimeHMS.value) + ' / ' + formatTime(durationHMS.value)}</p>
             </div>
-            <p>{formatTime(currentTimeHMS.value) + ' / ' + formatTime(durationHMS.value)}</p>
-          </div>
-          <div className={'alignRight'}>
-            {loop.value ? (
-              <BiRevision color={'white'} class='icon loop' onClick={() => (loop.value = !loop.value)}></BiRevision>
-            ) : (
-              <BiRotateRight color='white' class='icon loop' onClick={() => (loop.value = !loop.value)}></BiRotateRight>
-            )}
+            <div className='me-6 flex items-center justify-self-end'>
+              {loop.value ? (
+                <BiRevision
+                  color='white'
+                  className='me-1 ms-1 h-5 w-5'
+                  onClick={() => (loop.value = !loop.value)}
+                ></BiRevision>
+              ) : (
+                <BiRotateRight
+                  color='white'
+                  className='me-1 ms-1 h-5 w-5'
+                  onClick={() => (loop.value = !loop.value)}
+                ></BiRotateRight>
+              )}
+            </div>
           </div>
         </div>
-        <input
-          type='range'
-          min='0'
-          max={duration.value}
-          value={currentTime.value}
-          onChange={(e) => seekTo(e)}
-          id='progress'
-        ></input>
       </div>
     </div>
   );
@@ -299,7 +326,7 @@ function convertSecondsToHMS(seconds: number): HMS {
 }
 
 function formatTime(hms: HMS) {
-  return currentTimeHMS.value.hours != 0
+  return hms.hours != 0
     ? `${formatNumber(hms.hours)}:${formatNumber(hms.minutes)}:${formatNumber(hms.seconds)} / ${formatNumber(
         hms.hours,
       )}:${formatNumber(hms.minutes)}:${formatNumber(hms.seconds)}`

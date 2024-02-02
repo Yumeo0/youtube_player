@@ -9,7 +9,7 @@ class QueueManager {
 
   #onChangeHandle;
 
-  constructor(onChangeHandle: (queue: Queue) => void) {
+  constructor(onChangeHandle: (queue: Queue, newVideoNumber?: number) => void) {
     this.#onChangeHandle = onChangeHandle;
     this.#isRandom = false;
   }
@@ -53,17 +53,26 @@ class QueueManager {
     this.onChange();
   }
 
-  randomize() {
+  randomize(currentVideo?: number) {
     this.#isRandom = !this.#isRandom;
 
-    if (this.#isRandom) this.#queue = shuffle(this.#fixedQueue);
+    let newVideoNumber = 0;
+
+    if (this.#isRandom) this.#queue = shuffle(this.#fixedQueue, currentVideo);
     else if (this.#isReversed) {
       this.#queue = [...this.#fixedQueue];
       this.#queue.reverse();
       this.#queue = [...this.#queue];
-    } else this.#queue = [...this.#fixedQueue];
+    } else {
+      newVideoNumber = currentVideo !== undefined ? this.findVideoInQueue(this.#queue[currentVideo].url) : 0;
+      this.#queue = [...this.#fixedQueue];
+    }
 
-    this.onChange();
+    this.onChange(newVideoNumber);
+  }
+
+  isRandomized() {
+    return this.#isRandom;
   }
 
   reverse() {
@@ -75,17 +84,40 @@ class QueueManager {
     this.onChange();
   }
 
-  onChange() {
+  isReversed() {
+    return this.#isReversed;
+  }
+
+  onChange(newVideoNumber?: number) {
     if (this.#onChangeHandle === undefined) return;
-    this.#onChangeHandle(this.#queue);
+    this.#onChangeHandle(this.#queue, newVideoNumber);
+  }
+
+  findVideoInQueue(videoUrl: string) {
+    let queuePosition = 0;
+    for (const video of this.#fixedQueue) {
+      if (video.url.includes(videoUrl)) {
+        return queuePosition;
+      }
+      queuePosition++;
+    }
+    return 0;
   }
 }
 
-function shuffle(array: Queue) {
+function shuffle(array: Queue, currentVideo?: number) {
   const arr = [...array];
+  let currentVideoObj;
+  if (currentVideo !== undefined) {
+    currentVideoObj = arr[currentVideo];
+    arr.splice(currentVideo, 1);
+  }
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  if (currentVideoObj) {
+    arr.unshift(currentVideoObj);
   }
   return arr;
 }
