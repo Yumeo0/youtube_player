@@ -4,6 +4,7 @@ import VideoPlayer from './components/VideoPlayer';
 import QueueManager from './QueueManager';
 import { QueueElement, Queue as QueueType } from './types';
 import { Input } from '@/components/ui/input';
+import { API_BASE } from './consts';
 
 function App() {
   const [queueManager, setQueueManager] = useState(undefined as unknown as QueueManager);
@@ -40,7 +41,7 @@ function App() {
 
   const search = async (url: string) => {
     if (queueManager == null) return;
-    const res = await fetch(`http://localhost:3001/youtube`, {
+    const res = await fetch(`${API_BASE}/youtube`, {
       headers: { url: url },
     });
     const element: QueueElement = (await res.json()) as QueueElement;
