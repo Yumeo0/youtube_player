@@ -1,1 +1,1 @@
-export const API_BASE = 'http://api.youtube.xxchampionsxx.de';
+export const API_BASE = 'http://youtubeapi.xxchampionsxx.de';
