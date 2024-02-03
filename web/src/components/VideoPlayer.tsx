@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 
 import './VideoPlayer.css';
 import { Slider } from './ui/slider';
+import { API_BASE } from '@/consts';
 
 const audio = signal(undefined as unknown as HTMLAudioElement);
 const videoRef = signal(undefined as unknown as HTMLVideoElement);
@@ -44,7 +45,7 @@ function VideoPlayer({
   useEffect(() => {
     console.log('new video request');
     if (video?.url)
-      fetch(`http://localhost:3001/youtube`, {
+      fetch(`${API_BASE}/youtube`, {
         headers: { url: video.url },
       })
         .then((response) => response.json())
