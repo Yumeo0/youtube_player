@@ -5,11 +5,11 @@ services:
     image: ubuntu:latest
     volumes:
       - ./scripts:/scripts
-    entrypoint: /scripts/entrypoint.sh
+    entrypoint: ./scripts/entrypoint.sh
     environment:
       - GIT_REPO=https://github.com/xXChampionsXx/youtube_player.git
       - GIT_BRANCH=main
-      - GIT_DEST_PATH=/youtube-player
+      - GIT_DEST_PATH=/youtube_player
     ports:
       - "5173:5173"
       - "3001:3001"
