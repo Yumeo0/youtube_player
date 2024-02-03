@@ -4,7 +4,7 @@ services:
   ubuntu-latest:
     image: ubuntu:latest
     volumes:
-      - ./youtube_player/scripts:/scripts
+      - ./scripts:/scripts
     entrypoint: /scripts/entrypoint.sh
     environment:
       - GIT_REPO=https://github.com/xXChampionsXx/youtube_player.git
