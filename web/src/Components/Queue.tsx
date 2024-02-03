@@ -24,7 +24,7 @@ function Queue({
           {queueManager?.isReversed() ? 'Unreverse' : 'Reverse'}
         </Button>
       </div>
-      <ScrollArea id='Videos' className='h-full pe-2'>
+      <ScrollArea id='Videos' className='pe-2' style={{ height: 'calc(100% - 2.5rem - 1rem)' }}>
         {queue.map((video, index: number) => (
           <div
             id={currentVideo === index ? 'playing' : ''}

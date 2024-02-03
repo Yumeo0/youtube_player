@@ -2,9 +2,10 @@ import { computed, signal } from '@preact/signals-react';
 import { BiSkipPrevious, BiSkipNext, BiPause, BiPlay, BiVolumeFull, BiRevision, BiRotateRight } from 'react-icons/bi';
 import { FaSpinner } from 'react-icons/fa6';
 import { HMS, Format, Video, YoutubeResponse, RawVideo } from '../types';
-import { ChangeEvent, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import './VideoPlayer.css';
+import { Slider } from './ui/slider';
 
 const audio = signal(undefined as unknown as HTMLAudioElement);
 const videoRef = signal(undefined as unknown as HTMLVideoElement);
@@ -90,6 +91,8 @@ function VideoPlayer({
             }),
           });
 
+          document.title = `${video.videoDetails.title} - YouTube Player`;
+
           audio.value.src = audioUrls.value[audioUrls.value.length - 1]?.url;
           videoRef.value.src = videoUrls.value[videoUrls.value.length - 1]?.url;
           audio.value.load();
@@ -124,7 +127,7 @@ function VideoPlayer({
     if (audioElement == null) return;
     audio.value = audioElement;
     audio.value.volume = defaultVolume / 100;
-    const volumeSlider: HTMLInputElement = document.getElementById('volume') as HTMLInputElement;
+    const volumeSlider: HTMLInputElement = document.getElementById('Volume') as HTMLInputElement;
     if (volumeSlider == null) return;
     volumeSlider.value = `${defaultVolume}`;
 
@@ -203,17 +206,13 @@ function VideoPlayer({
     }
   }
 
-  function changeVolume(e: ChangeEvent) {
-    if (e.target == null) return;
-    const input = e.target as HTMLInputElement;
-    audio.value.volume = parseFloat(input.value) / 100;
+  function changeVolume(e: number[]) {
+    audio.value.volume = e[0] / 100;
   }
 
-  function seekTo(e: ChangeEvent) {
-    if (e.target == null) return;
+  function seekTo(e: number[]) {
     pause();
-    const input = e.target as HTMLInputElement;
-    audio.value.currentTime = parseFloat(input.value);
+    audio.value.currentTime = e[0];
   }
 
   function videoEnd() {
@@ -251,15 +250,15 @@ function VideoPlayer({
           id='VideoControls'
           className='absolute bottom-0 hidden w-full flex-col items-center pe-2 ps-2 group-hover:flex'
         >
-          <input
-            type='range'
-            min='0'
+          <Slider
+            defaultValue={[33]}
+            min={0}
             max={duration.value}
-            value={currentTime.value}
-            onChange={(e) => seekTo(e)}
+            value={[currentTime.value]}
+            onValueChange={(e) => seekTo(e)}
             id='progress'
             className='w-full'
-          ></input>
+          />
           <div className='flex w-full flex-row items-center justify-between'>
             <div className='flex items-center'>
               <BiSkipPrevious className='me-1 ms-4 h-6 w-6' color='white' onClick={() => previous()}></BiSkipPrevious>
@@ -274,17 +273,17 @@ function VideoPlayer({
                 color='white'
                 onClick={() => skip()}
               ></BiSkipNext>
-              <div id='VolumeGroup' className='group flex h-12 items-center'>
-                <BiVolumeFull color='white' type='solid' className='me-1 ms-1 h-5 w-5'></BiVolumeFull>
-                <input
-                  className='m-0 mr-1 hidden h-5 w-24 group-hover:block'
-                  type='range'
-                  min='0'
-                  max='10'
+              <div id='VolumeGroup' className='flex h-12 items-center'>
+                <BiVolumeFull id='VolumeIcon' color='white' type='solid' className='me-1 ms-1 h-5 w-5'></BiVolumeFull>
+                <Slider
+                  defaultValue={[5]}
+                  min={0}
+                  max={10}
                   step={0.1}
-                  id='volume'
-                  onChange={(e) => changeVolume(e)}
-                ></input>
+                  onValueChange={(e) => changeVolume(e)}
+                  id='Volume'
+                  className='m-0 mr-1 hidden h-5 w-24'
+                />
               </div>
               <p>{formatTime(currentTimeHMS.value) + ' / ' + formatTime(durationHMS.value)}</p>
             </div>
