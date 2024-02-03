@@ -14,4 +14,4 @@ start_client(){
 
 git pull
 
-start_server & start_client && fg
+start_server & start_client &
