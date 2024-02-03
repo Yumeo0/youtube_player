@@ -248,7 +248,7 @@ function VideoPlayer({
         />
         <div
           id='VideoControls'
-          className='absolute bottom-0 hidden w-full flex-col items-center pe-2 ps-2 group-hover:flex'
+          className='absolute bottom-0 hidden w-full flex-col items-center pe-2 ps-2 pt-9 group-hover:flex'
         >
           <Slider
             defaultValue={[33]}
