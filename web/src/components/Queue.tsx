@@ -14,7 +14,6 @@ function Queue({
   setCurrentVideo: (index: number) => void;
   queueManager: QueueManager;
 }) {
-  console.log(queue);
   return (
     <div id='Queue' className='h-full w-2/6 max-w-md overflow-hidden rounded-lg border bg-background'>
       <div>
