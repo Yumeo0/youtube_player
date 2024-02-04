@@ -39,8 +39,8 @@ function Queue({
               alt={video.title + ' Thumbnail'}
             />
             <div className={currentVideo === index ? 'text-accent-foreground' : 'text-primary'}>
-              <p>{video.title}</p>
-              <a href={video.author.url} target='_blank' rel='noreferrer'>
+              <p className='line-clamp-2'>{video.title}</p>
+              <a className='line-clamp-1' href={video.author.url} target='_blank' rel='noreferrer'>
                 {video.author.name}
               </a>
             </div>
