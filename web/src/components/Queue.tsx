@@ -14,6 +14,7 @@ function Queue({
   setCurrentVideo: (index: number) => void;
   queueManager: QueueManager;
 }) {
+  console.log(queue);
   return (
     <div id='Queue' className='h-full w-2/6 max-w-md overflow-hidden rounded-lg border bg-background'>
       <div>
@@ -28,7 +29,7 @@ function Queue({
         {queue.map((video, index: number) => (
           <div
             id={currentVideo === index ? 'playing' : ''}
-            className={'flex h-20 items-center pe-1 ps-2 ' + (currentVideo === index ? 'bg-accent' : '')}
+            className={'flex h-20 cursor-pointer items-center pe-1 ps-2 ' + (currentVideo === index ? 'bg-accent' : '')}
             key={video.url + '_' + index}
             onClick={() => setCurrentVideo(index)}
           >
@@ -40,9 +41,7 @@ function Queue({
             />
             <div className={currentVideo === index ? 'text-accent-foreground' : 'text-primary'}>
               <p className='line-clamp-2'>{video.title}</p>
-              <a className='line-clamp-1' href={video.author.url} target='_blank' rel='noreferrer'>
-                {video.author.name}
-              </a>
+              <p className='line-clamp-1'>{video.author.name}</p>
             </div>
           </div>
         ))}
