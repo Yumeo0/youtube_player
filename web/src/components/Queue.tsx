@@ -29,7 +29,7 @@ function Queue({
           <div
             id={currentVideo === index ? 'playing' : ''}
             className={
-              'flex h-20 cursor-pointer items-center pe-1 ps-2 hover:bg-accent' +
+              'flex h-20 cursor-pointer items-center pe-1 ps-2 hover:bg-accent ' +
               (currentVideo === index ? 'bg-accent' : '')
             }
             key={video.url + '_' + index}
