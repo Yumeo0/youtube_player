@@ -3,14 +3,15 @@ set -e
 
 # Install the necessary software
 apt-get update
-apt-get install -y gnupg curl
+apt-get install -y gnupg curl git cron
 
-curl -fsSL https://deb.nodesource.com/setup_21.x | bash -
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
+# Install Node.js
+curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 apt-get update
-apt-get install -y git cron nodejs yarn
+apt-get install -y nodejs
+
+# Install Yarn
+npm install -g yarn
 
 # Clone or pull the repository
 mkdir -p "$GIT_DEST_PATH"

@@ -92,6 +92,8 @@ function VideoPlayer({
             }),
           });
 
+          console.log(video);
+
           document.title = `${video.videoDetails.title} - YouTube Player`;
 
           audio.value.src = audioUrls.value[audioUrls.value.length - 1]?.url;
