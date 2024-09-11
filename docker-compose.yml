@@ -5,7 +5,7 @@ services:
       - ./scripts:/scripts
     entrypoint: /scripts/entrypoint.sh
     environment:
-      - GIT_REPO=https://github.com/xXChampionsXx/youtube_player.git
+      - GIT_REPO=https://github.com/Yumeo0/youtube_player.git
       - GIT_BRANCH=main
       - GIT_DEST_PATH=/youtube_player
     ports:
