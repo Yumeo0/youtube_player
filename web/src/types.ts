@@ -51,7 +51,7 @@ export type PlaylistVideo = {
   author: Author;
   bestThumbnail: Thumbnail | undefined;
   durationSec: number;
-  thumbnails: Thumbnail[];
+  thumbnail: string;
   title: string;
   shortUrl: string;
 };

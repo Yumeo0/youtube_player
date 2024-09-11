@@ -41,8 +41,8 @@ class QueueManager {
           author: video.author,
           durationSec: video.durationSec,
           url: video.shortUrl,
-          bestThumbnail: video.bestThumbnail,
-          thumbnails: video.thumbnails,
+          bestThumbnail: undefined,
+          thumbnails: [{ height: 0, width: 0, url: video.thumbnail }],
         });
       });
 

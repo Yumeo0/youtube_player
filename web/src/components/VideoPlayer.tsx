@@ -62,8 +62,7 @@ function VideoPlayer({
           }
 
           let videoFormats = formats.filter((format: Format) => {
-            console.log(format);
-            return format.mimeType?.includes('video/mp4');
+            return format.mimeType?.includes('video/mp4') && !format.url.includes('m3u8');
           });
           videoFormats = videoFormats.sort((a: Format, b: Format) => {
             return a.bitrate - b.bitrate;
@@ -93,12 +92,11 @@ function VideoPlayer({
             }),
           });
 
-          console.log(video);
-
           document.title = `${video.videoDetails.title} - YouTube Player`;
 
           audio.value.src = audioUrls.value[audioUrls.value.length - 1]?.url;
           videoRef.value.src = videoUrls.value[videoUrls.value.length - 1]?.url;
+          console.log(videoUrls.value[videoUrls.value.length - 1]?.url);
           audio.value.load();
           videoRef.value.load();
         })
