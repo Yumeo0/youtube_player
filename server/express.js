@@ -1,6 +1,6 @@
 const { insert, login } = require("./db.js");
 const ytdl = require("@distube/ytdl-core");
-const ytpl = require("ytpl");
+const ytpl = require("@distube/ytpl");
 const express = require("express");
 const app = express();
 const cors = require("cors");

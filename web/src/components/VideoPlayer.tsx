@@ -62,7 +62,8 @@ function VideoPlayer({
           }
 
           let videoFormats = formats.filter((format: Format) => {
-            return format.mimeType.includes('video/mp4');
+            console.log(format);
+            return format.mimeType?.includes('video/mp4');
           });
           videoFormats = videoFormats.sort((a: Format, b: Format) => {
             return a.bitrate - b.bitrate;
@@ -70,7 +71,7 @@ function VideoPlayer({
           videoUrls.value = videoFormats;
 
           let audioFormats = formats.filter((format: Format) => {
-            return format.mimeType.includes('audio');
+            return format.mimeType?.includes('audio');
           });
           audioFormats = audioFormats.sort((a: Format, b: Format) => {
             return a.bitrate - b.bitrate;
