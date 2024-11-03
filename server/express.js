@@ -4,7 +4,9 @@ const ytpl = require("@distube/ytpl");
 const express = require("express");
 const app = express();
 const cors = require("cors");
-app.use(cors());
+app.use(cors({
+  origin: 'httpy://yumeo.dev',
+}));
 app.use(express.json());
 const port = 3001;
 
