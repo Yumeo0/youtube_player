@@ -5,7 +5,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 app.use(cors({
-  origin: /^https?:\/\/([a-z0-9-]+\.)*yumeo\.dev$/,
+  origin: ["https://youtube.yumeo.dev", "https://youtubeapi.yumeo.dev", /\.yumeo\.dev$/]
 }));
 app.use(express.json());
 const port = 3001;
