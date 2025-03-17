@@ -1,16 +1,16 @@
 services:
-  ubuntu-latest:
-    image: ubuntu:latest
+  youtube-player:
+    container_name: youtube-player
+    image: node:latest
     volumes:
-      - ./scripts:/scripts
-    entrypoint: /scripts/entrypoint.sh
+      - ./scripts:/app/scripts
+      - ./web:/app/web
+      - ./server:/app/server
+    entrypoint: /app/scripts/start.sh
     environment:
       - GIT_REPO=https://github.com/Yumeo0/youtube_player.git
       - GIT_BRANCH=main
-      - GIT_DEST_PATH=/youtube_player
+      - GIT_DEST_PATH=/youtube-player
     ports:
       - "5173:5173"
       - "3001:3001"
-
-volumes:
-  app-volume:

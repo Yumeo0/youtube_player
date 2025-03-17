@@ -1,17 +1,19 @@
-##!/bin/bash
+#!/bin/bash
 
 start_server(){
-        cd server
-        yarn
-        yarn dev
+        cd /app/server
+        npm install
+        npm run dev
 }
 
 start_client(){
-        cd web
-        yarn
-        yarn start
+        cd /app/web
+        npm install
+        npm run start
 }
 
-git pull
+echo "Starting..."
+start_server &
+start_client &
 
-start_server & start_client &
+wait  # Keeps the script running and waits for background processes to complete
